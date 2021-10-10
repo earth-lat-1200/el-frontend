@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1162.2 1162.2" style="enable-background:new 0 0 1162.2 1162.2;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:url(#SVGID_2_);}
+	.st2{fill:url(#SVGID_3_);}
+	.st3{opacity:0.3;fill:#585764;enable-background:new    ;}
+	.st4{fill:#585764;}
+	.st5{opacity:0.1;}
+	.st6{fill:#030405;}
+	.st7{opacity:0.5;}
+	.st8{fill:url(#SVGID_4_);}
+	.st9{fill:url(#SVGID_5_);}
+</style>
+<g id="Ebene_9">
+	
+		<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="1021.7173" y1="1760.4426" x2="1021.7173" y2="991.7498" gradientTransform="matrix(1 0 0 1 -290.16 -666.3403)">
+		<stop  offset="0" style="stop-color:#828383;stop-opacity:0.25"/>
+		<stop  offset="0.54" style="stop-color:#828383;stop-opacity:0.12"/>
+		<stop  offset="1" style="stop-color:#828383;stop-opacity:0.1"/>
+	</linearGradient>
+	<path class="st0" d="M1115.4,709.8c0,212.4-181.9,384.3-375.5,384.3S347.7,921.8,347.7,709.8s198.4-384.3,392.2-384.3
+		C933.4,325.1,1115.4,497.4,1115.4,709.8z"/>
+</g>
+<g id="Ebene_8">
+	
+		<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="455.246" y1="999.5667" x2="991.1812" y2="1535.5016" gradientTransform="matrix(1 0 0 1 0 -566.9291)">
+		<stop  offset="0" style="stop-color:#63ACE0"/>
+		<stop  offset="1" style="stop-color:#427BBE"/>
+		<stop  offset="1" style="stop-color:#020203"/>
+	</linearGradient>
+	<circle class="st1" cx="723.2" cy="700.6" r="379"/>
+</g>
+<g id="Ebene_7">
+	
+		<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="510.2479" y1="1054.5685" x2="936.1793" y2="1480.4998" gradientTransform="matrix(1 0 0 1 0 -566.9291)">
+		<stop  offset="0" style="stop-color:#AEB8B8"/>
+		<stop  offset="1" style="stop-color:#D4DFDE"/>
+	</linearGradient>
+	<circle class="st2" cx="723.2" cy="700.6" r="301.2"/>
+</g>
+<g id="Ebene_6">
+	
+		<rect x="811.6" y="650.5" transform="matrix(0.6388 -0.7694 0.7694 0.6388 -306.6212 913.9652)" class="st3" width="17" height="266.2"/>
+</g>
+<g id="Ebene_4">
+	<circle class="st4" cx="723.2" cy="700.6" r="32"/>
+	
+		<rect x="680.7" y="530.8" transform="matrix(0.9491 -0.3149 0.3149 0.9491 -158.88 249.0469)" class="st4" width="21.3" height="170.9"/>
+</g>
+<g id="Ebene_3" class="st5">
+	<g>
+		<path class="st6" d="M445.5,736.9C445.2,570.6,580,435.5,746.4,435.2c95,0,184.4,44.4,241.4,120.6
+			c-80.5-145.6-264-198.1-409.4-117.6c-144.8,79.9-197.8,261.3-119.5,406.7c7,12.9,15.1,25.3,24,36.9
+			C458.4,837.3,445.5,787.5,445.5,736.9z"/>
+	</g>
+</g>
+<g id="Ebene_2">
+	<g>
+		<g class="st7">
+			
+				<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="490.4444" y1="1264.2526" x2="490.4444" y2="640.3627" gradientTransform="matrix(1 0 0 1 -131.66 -572.2603)">
+				<stop  offset="0" style="stop-color:#828383;stop-opacity:0.25"/>
+				<stop  offset="0.54" style="stop-color:#828383;stop-opacity:0.12"/>
+				<stop  offset="1" style="stop-color:#828383;stop-opacity:0.1"/>
+			</linearGradient>
+			<circle class="st8" cx="358.8" cy="380" r="311.9"/>
+		</g>
+		
+			<linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="572.7974" y1="1070.5371" x2="144.7714" y2="823.4158" gradientTransform="matrix(1 0 0 1 0 -566.9291)">
+			<stop  offset="0" style="stop-color:#63ACE0"/>
+			<stop  offset="0" style="stop-color:#FFD35E"/>
+			<stop  offset="1" style="stop-color:#E58656"/>
+			<stop  offset="1" style="stop-color:#427BBE"/>
+			<stop  offset="1" style="stop-color:#020203"/>
+		</linearGradient>
+		<circle class="st9" cx="358.8" cy="380" r="247.1"/>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,235 @@
+//styling for the Landing-Part
+
+.Landing
+  height: 100vh
+  width: 100%
+
+h1
+  font-family: 'metropolissemi_bold'
+  display: inline-block
+  position: relative
+  top: 50vh
+  left: 10%
+  font-size: 4vw
+  margin: 0
+  margin-left: .5vw !important
+
+h2
+  font-family: 'metropolisregular'
+  font-weight: normal
+  display: block
+  top: 50%
+  position: relative
+  left: 10%
+  font-size: 1.5vw
+  margin: 0
+
+#landingHeadingPartTwo
+  color: $blue
+  margin-left: 0
+  margin-right: 50vw
+
+
+
+#landingIllustration
+  position: absolute
+  top: 22.5%
+  right: 20%
+  height: 55%
+
+#landingAction
+  position: relative
+  top: 52vh
+  left: 10%
+  font-size: 1vw
+
+#landingAction:hover
+  font-size: 1.1vw
+  top: 51.8vh
+
+#landingScrollText
+  font-family: metropolissemi_bold
+  font-size: 1.2em
+  display: inline-block
+  position: absolute
+  transform: rotate(-90deg)
+  left: 8.7%
+  top: 89vh
+
+#landingScrollLine
+  display: inline-block
+  position: absolute
+  transform: rotate(-90deg)
+  left: 9.1%
+  top: 97.3vh
+  border-top: 0.2em solid black
+  width: 5vh
+
+#landingLinks
+  float: right
+  width: 60%
+  text-align: right
+  right: 20%
+  padding-right: 10%
+
+
+nav
+  position: absolute
+  top: 0
+  left: 0
+  padding-left: 8%
+  padding-top: 2em
+  width: 92%
+
+  img
+    width: 2.4em
+
+  h1
+    margin: 0
+    top: -0.4em
+    font-size: 1.5em
+    left: 0
+    margin-left: 1em
+
+  button
+    position: relative
+    display: inline-block
+    color: white
+    font-family: 'metropolissemi_bold'
+    top: -2em
+    margin-right: 5%
+    padding: 0
+    background-color: transparent
+    border: none
+    border-radius: 0
+    box-shadow: none
+    font-size: 1.2em
+
+  button:hover
+    padding: 0
+    background-color: transparent
+    border: none
+    border-radius: 0
+    box-shadow: none
+    transition: none
+    font-size: 1.2em
+    top: -2em
+    color: lighten($blue, 25)
+    margin-right: 5%
+    margin-left: 0
+
+#login
+  text-align: center
+  background-color: white
+  width: 15%
+  height: auto
+  position: absolute
+  right: 5%
+  top: 10vh
+  box-shadow: 0px 10px 30px 2px transparentize($dark, 0.8)
+  border-radius: .5em
+  border-bottom: .5em $yellow solid
+  z-index: 100
+  padding: 2em 1em
+
+  h2
+    font-size: 1.2em
+    font-family: metropolissemi_bold
+    left: 0
+
+  p
+    font-family: metropolisregular
+    font-size: 0.9em
+    color: #AAACB1
+
+  input
+    padding-left: 5%
+    padding-right: 5%
+    width: 70%
+    margin-top: 2em
+    height: 2.5em
+
+  button
+    top: 0
+    margin-top: 3em
+
+  button:hover
+    padding: 0.5em 2.5em
+    margin-top: 3em
+    margin-left: 0
+    font-size: 0.9em
+    box-shadow: 0px 4px 10px 3px rgba(255, 210, 88, 0.5)
+    background-color: darken($yellow, 5)
+
+@media screen and (max-width: 1000px)
+  #landingIllustration
+    width: 35%
+    height: auto
+    left: 45%
+    top: 35%
+
+@media screen and (max-width: 600px)
+
+  #landingScrollLine
+    display: none
+
+  #landingScrollText
+    display: none
+
+  #landingIllustration
+    width: 50%
+    height: auto
+    left: 23%
+    top: 10%
+
+
+  #login
+    width: 70%
+    left: 17%
+
+    h2
+      top: 0
+
+  nav
+
+    #landingLinks
+      top: 1em
+      display: none
+
+      div
+        display: none
+
+    h1
+      display: none
+
+  h1
+    font-size: 10vw
+    width: auto
+    top: 0
+    left: 0
+
+  #landingHeadingPartTwo
+    margin-right: 0
+    color: $yellow
+
+  #landingHeading
+    text-align: center
+    width: 100%
+    top: 50vh
+    position: relative
+
+  h2
+    text-align: center
+    left: 0
+    font-size: 5vw
+    top: 50vh
+
+  #landingAction
+    position: relative
+    top: 52vh
+    left: 28%
+    font-size: 4vw
+
+  #landingAction:hover
+    font-size: 4.1vw
+    top: 51.8vh
