@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
 })
 
 function calcWidth() {
-    return window.innerWidth * 1.3;
+    return window.innerWidth * 1.35;
 }
 
 window.addEventListener('resize', (event) => {
