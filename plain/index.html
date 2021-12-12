@@ -6,11 +6,35 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <base href="./">
     <title>EarthLAT</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/metropolis" type="text/css"/>
+    <link rel="stylesheet" href="index.css">    
 </head>
 <body>
-<div id="globe"></div>
-<script type="text/javascript" src="index.js"></script>
-<script src="//unpkg.com/globe.gl"></script>
+
+    <div class="container">
+                
+        <div id="globe"></div>
+
+        <nav>
+            <img class="navLogo" src="./logo-500px.png">
+            <h1>Earth L.A.T. <span class="blueAccent">12:00</span></h1>
+            <div id="landingLinks">
+                <button>Live</button>
+                <button>About</button>
+                <a href="mailto:contact@earthlat1200.org">
+                <button>Contact</button></a>
+                <button>Join</button>
+            </div>
+        </nav>
+
+        <div id="landingHeading">
+            <h1 class="heading">Earth L.A.T. <span class="blueAccent">12:00</span></h1>
+            <h2 class="headingCaption">watch the rotating earth.</h2>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="index.js"></script>
+    <script src="//unpkg.com/globe.gl"></script>
 </body>
 </html>
