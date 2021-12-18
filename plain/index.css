@@ -1,7 +1,137 @@
+
+
+body {
+    margin: 0;
+    font-family: "Roboto Light", serif;
+}
 #globe {
     width: 100%;
     height: 100%;
+    z-index: 0;
 }
-body {
+
+#station {
+    z-index: 1;
+    position: absolute;
+    left: 10%;
+    top: 50%;
+    max-width: 90%;
+    max-height: 40%;
+    display: none;
+}
+
+#time-lapse {
+    color: white;
+}
+
+#station-picture {
+    position: relative;
+    padding: 3px;
+    border: 2px solid #b38f00;
+}
+
+#station-info-label {
+    flex: 3;
+    color: white;
+    font-size: 20px;
+}
+
+#station-image {
+    z-index: 1;
+    position: relative;
+}
+
+#current-view {
+    color: #b38f00;
+}
+
+#current-view, #time-lapse {
+    font-size: 15px;
+}
+
+#stationActions {
+    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.item {
+    flex: 1;
+}
+
+#close-station {
+    font-weight: bold;
+    z-index: 999;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 5px 7px 0 0;
+    font-size: 20px;
+    transition: 0.5s;
+}
+
+#close-station:hover {
+    top: 0px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+#station-image-overlay {
+    z-index: 900;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    opacity: 0.7;
+}
+
+#station-frame-parent {
+    height: inherit;
+    width: inherit;
+    position: relative;
+}
+
+#info-btn {
+    flex: 1;
+    text-align: left;
+    color: white;
+    cursor: pointer;
+}
+
+#stationLableWrapper p {
     margin: 0;
+    padding: 20px 0 5px 0;
+    font-size: 20px;
+}
+
+#station-data {
+    flex: 3;
+    color: white;
+    display: block;
+    margin: auto;
+    padding: 5px;
+}
+#station-data p {
+    margin: 5px 0 3px 0;
+}
+.br {
+    display: block;
+    margin-bottom: 1em;
+}
+#station-data br {
+    margin-bottom: -.2em;
+}
+.station-data-block {
+    margin-bottom: 10px;
+}
+
+.image-overlay-off {
+    display: none;
 }

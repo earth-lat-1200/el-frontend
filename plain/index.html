@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="../station-popup.css"/>
     <meta charset="utf-8">
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0"/>
     <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -10,6 +11,43 @@
 </head>
 <body>
 <div id="globe"></div>
+<div id="station">
+    <div id="station-frame-parent">
+        <div id="close-station" class="image-overlay-off" onclick="onClickClose()">X</div>
+        <div id="station-picture">
+            <img id="station-image">
+            <div id="station-image-overlay" class="wrapper image-overlay-off">
+                <span class="item"></span>
+                <div id="station-data">
+                    <p>Location: Atzenhain, Germany</p>
+                    <p>50°38´53´´N 8°59´15´´E</p>
+                    <span class="br"></span>
+                    <p>Webcam: RaspberryPI+Cam</p>
+                    <p>Transfer: RaspberryPI</p>
+                    <span class="br"></span>
+                    <p>Description: empiric drawn vertical sundial showing clock time.</p>
+                    <span class="br"></span>
+                    <p>Website:</p>
+                    <span class="br"></span>
+                    <p>Team: Gerhard and Matheus Benna</p>
+                </div>
+            </div>
+        </div>
+        <div id="stationActions">
+            <div id="station-label-wrapper" class="wrapper">
+                <span class="item"></span>
+                <p id="station-info-label">Bennauhr - Atzenhain, Germany</p>
+                <p id="info-btn" onclick="showStationData()">i</p>
+            </div>
+            <div class="wrapper">
+                <span class="item"></span>
+                <p id="current-view" class="item">current view</p>
+                <p id="time-lapse" class="item">time lapse</p>
+                <span class="item"></span>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript" src="index.js"></script>
 <script src="//unpkg.com/globe.gl"></script>
 </body>

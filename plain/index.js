@@ -1,6 +1,7 @@
+let shownImage;
+
 document.addEventListener("DOMContentLoaded", function () {
     fetch('./example_places.geojson').then(res => res.json()).then(places => {
-
 
         const arcsData = [
             {
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         ];
 
-        let zoom = { altitude: 2.5 };
+        let zoom = {altitude: 2.5};
         const globe = Globe()
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
@@ -41,12 +42,37 @@ document.addEventListener("DOMContentLoaded", function () {
             (document.getElementById('globe'))
 
         globe.onLabelClick((label, event) => {
-            alert('label clicked!')
-            console.log(label)
+            loadImage()
         })
         globe.onZoom(v => {
             zoom = v;
         })
-        globe.pointOfView({ lat: 0, lng: 2, altitude: zoom.altitude }, 1000)
+        globe.pointOfView({lat: 0, lng: 2, altitude: zoom.altitude}, 1000)
     });
 })
+
+loadImage = () => {
+    const imgEl = document.getElementById('station-image');
+    const divEl = document.getElementById('station');
+    fetch('./example_station.png').then(res => res.blob()).then(resImg => {
+        shownImage = URL.createObjectURL(resImg);
+        imgEl.src = shownImage;
+        divEl.style.display = 'block';
+    });
+}
+
+onClickClose = () => {
+    const overlays = document.getElementsByClassName('image-overlay');
+    while (overlays.length > 0) {
+        overlays[0].classList.add('image-overlay-off');
+        overlays[0].classList.remove('image-overlay');
+    }
+}
+
+showStationData = () => {
+    const overlays = document.getElementsByClassName('image-overlay-off');
+    while (overlays.length > 0) {
+        overlays[0].classList.add('image-overlay');
+        overlays[0].classList.remove('image-overlay-off');
+    }
+}
