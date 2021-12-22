@@ -1,4 +1,5 @@
 let shownImage;
+let globe;
 
 document.addEventListener("DOMContentLoaded", function () {
     fetch('./example_places.geojson').then(res => res.json()).then(places => {
@@ -20,10 +21,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         ];
 
-        let zoom = {altitude: 2.5};
-        const globe = Globe()
+        let zoom = { altitude: 2.5 };
+        globe = Globe()
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+            .width(calcWidth())
+            .height(window.innerHeight)
             .labelsData(places.features)
             .labelLat(d => d.properties.latitude)
             .labelLng(d => d.properties.longitude)
@@ -47,10 +50,13 @@ document.addEventListener("DOMContentLoaded", function () {
         globe.onZoom(v => {
             zoom = v;
         })
-        globe.pointOfView({lat: 0, lng: 2, altitude: zoom.altitude}, 1000)
+        globe.pointOfView({ lat: 10, lng: 25, altitude: zoom.altitude }, 1000)
     });
 })
 
+function calcWidth() {
+    return window.innerWidth * 1.35;
+}
 loadImage = () => {
     const imgEl = document.getElementById('station-image');
     const divEl = document.getElementById('station');

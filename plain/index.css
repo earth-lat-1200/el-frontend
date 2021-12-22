@@ -1,15 +1,75 @@
-
-
+#globe {
+    position: absolute;
+    z-index: -10;
+}
 body {
     margin: 0;
-    font-family: "Roboto Light", serif;
+    overflow-x: hidden;
+    background-color: black;
+    color: white;
 }
-#globe {
-    width: 100%;
-    height: 100%;
-    z-index: 0;
+nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding-left: 8%;
+    padding-top: 2em;
+    width: 92%;
 }
-
+nav img {
+    width: 2.4em;
+}
+nav h1 {
+    margin: 0;
+    top: -0.4em;
+    font-size: 1.5em;
+    left: 0;
+    margin-left: 0.3em;
+}
+nav button {
+    padding-top: 0.5em;
+    padding-right: 2em;
+    color: white;
+    font-family: 'MetropolisSemiBold';
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    font-size: 1.2em;
+}
+nav button:hover {
+    color: #cfeaff;
+}
+h1 {
+    font-family: 'MetropolisSemiBold';
+    display: inline-block;
+    position: relative;
+}
+h2 {
+    font-family: 'MetropolisRegular';
+    font-weight: normal;
+}
+#landingLinks {
+    float: right;
+    margin-right: 8%;
+}
+#landingHeading {
+    position: absolute;
+    padding-top: 30vh;
+    padding-left: 10vw;
+}
+.heading {
+    font-size: 3vw;
+    margin-bottom: 1vw;
+}
+.headingCaption {
+    font-family: 'MetropolisLight';
+    font-size: 1.6vw;
+    margin-top: 0;
+}
+.blueAccent {
+    color: rgb(79, 179, 255);
+}
 #station {
     z-index: 1;
     position: absolute;
