@@ -82,3 +82,6 @@ showStationData = () => {
         overlays[0].classList.remove('image-overlay-off');
     }
 }
+
+window.addEventListener('resize', function(event) {
+}, true);
