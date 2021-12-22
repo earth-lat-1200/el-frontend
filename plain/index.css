@@ -109,13 +109,23 @@ h2 {
     }
 
 }
+@media only screen and (max-width: 500px) {
+    #station-info-label {
+        font-size: 15px!important;
+    }
+
+    #current-view, #time-lapse, #station-data {
+        font-size: 12px!important;
+    }
+
+}
 .blueAccent {
     color: rgb(79, 179, 255);
 }
 #station {
     z-index: 1;
     position: absolute;
-    left: 10%;
+    left: 10vw;
     top: 50%;
     max-width: 90%;
     max-height: 40%;
@@ -128,7 +138,6 @@ h2 {
 
 #station-picture {
     position: relative;
-    padding: 3px;
     border: 2px solid #b38f00;
 }
 
@@ -141,6 +150,8 @@ h2 {
 #station-image {
     z-index: 1;
     position: relative;
+    width: 100%;
+    /*object-fit: contain;*/
 }
 
 #current-view {

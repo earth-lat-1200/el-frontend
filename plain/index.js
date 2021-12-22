@@ -1,5 +1,12 @@
 let shownImage;
 let globe;
+const DEFAULT_LANDSCAPE_ALTITUDE = 2.5;
+const DEFAULT_PORTRAIT_ALTITUDE = 3;
+const MINIMUM_ALTITUDE = 4;
+
+function triggerResize() {
+    window.dispatchEvent(new Event('resize'));
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     fetch('./example_places.geojson').then(res => res.json()).then(places => {
@@ -22,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         ];
 
-        let zoom = { altitude: 2.5 };
+        let zoom = {altitude: 2.5};
         globe = Globe()
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
@@ -46,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
             (document.getElementById('globe'))
 
         globe.onLabelClick((label, event) => {
-            loadImage()
+            loadImage();
         })
         globe.onZoom(v => {
             zoom = v;
@@ -58,6 +65,15 @@ document.addEventListener("DOMContentLoaded", function () {
 function calcWidth() {
     return window.innerWidth * 1.35;
 }
+
+function calcHeight() {
+    const stationEl = document.getElementById('station');
+    let screenOccupy = stationEl.offsetHeight / window.innerHeight;
+    let multiplier = screenOccupy === 0 ? 1 : 1 - screenOccupy;
+
+    return window.innerHeight * multiplier;
+}
+
 loadImage = () => {
     const imgEl = document.getElementById('station-image');
     const divEl = document.getElementById('station');
@@ -65,6 +81,13 @@ loadImage = () => {
         shownImage = URL.createObjectURL(resImg);
         imgEl.src = shownImage;
         divEl.style.display = 'block';
+        imgEl.style.objectFit = 'contain';
+        // UGLY solution, couldn't find an alternative yet
+        setTimeout(function () {
+            triggerResize();
+            triggerResize();
+            triggerResize();
+        }, 100);
     });
 }
 
@@ -72,14 +95,35 @@ function setGlobePOV() {
     var lat = 10;
     var lng = 25;
     globe.height(window.innerHeight);
+    let altitude;
     if (window.innerWidth > window.innerHeight) // landscape
     {
+        resizeStationInfoLandscape();
+        globe.height(window.innerHeight);
         globe.width(calcWidth());
-        globe.pointOfView({ lat, lng, altitude: 2.5 });
+        altitude = DEFAULT_LANDSCAPE_ALTITUDE;
     } else { // portrait
+        resizeStationInfoPortrait();
+        globe.height(calcHeight());
         globe.width(window.innerWidth);
-        globe.pointOfView({ lat, lng, altitude: 3 });
+        altitude = window.innerWidth < 550 ? MINIMUM_ALTITUDE : DEFAULT_PORTRAIT_ALTITUDE;
     }
+    globe.pointOfView({lat, lng, altitude: altitude});
+}
+
+resizeStationInfoPortrait = () => {
+    const stationEl = document.getElementById('station');
+    const stationWidth = stationEl.offsetWidth;
+    stationEl.style.left = `${(window.innerWidth - stationWidth) / 2}px`;
+    stationEl.style.top = 'auto';
+    stationEl.style.bottom = '5px';
+}
+
+resizeStationInfoLandscape = () => {
+    const stationEl = document.getElementById('station');
+    stationEl.style.left = `10vw`;
+    stationEl.style.top = '50%';
+    stationEl.style.bottom = 'auto';
 }
 
 onClickClose = () => {
