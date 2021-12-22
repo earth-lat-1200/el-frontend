@@ -1,8 +1,13 @@
+#globe {
+    position: absolute;
+    z-index: -10;
+}
 body {
     margin: 0;
     overflow-x: hidden;
     background-color: black;
     color: white;
+    font-family: 'MetropolisLight';
 }
 nav {
     position: absolute;
@@ -10,20 +15,20 @@ nav {
     left: 0;
     padding-left: 8%;
     padding-top: 2em;
-    width: 92%; 
+    width: 92%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 nav img {
-    width: 2.4em; 
+    width: 2.4em;
 }
 nav h1 {
     margin: 0;
     top: -0.4em;
     font-size: 1.5em;
     left: 0;
-    margin-left: 0.3em; 
+    margin-left: 0.3em;
 }
 nav button {
     padding-top: -0.8em;
@@ -34,7 +39,7 @@ nav button {
     border: none;
     border-radius: 0;
     box-shadow: none;
-    font-size: 1.2em; 
+    font-size: 1.2em;
 }
 nav button:hover {
     color: #cfeaff;
@@ -48,9 +53,9 @@ h2 {
     font-family: 'MetropolisRegular';
     font-weight: normal;
 }
-#globe {
-    position: absolute;
-    z-index: -10;
+#landingLinks {
+    float: right;
+    margin-right: 8%;
 }
 .landingHeading {
     position: absolute;
@@ -104,6 +109,142 @@ h2 {
     }
 
 }
+@media only screen and (max-width: 500px) {
+    #station-info-label {
+        font-size: 15px!important;
+    }
+
+    #current-view, #time-lapse, #station-data {
+        font-size: 12px!important;
+    }
+
+}
 .blueAccent {
     color: rgb(79, 179, 255);
+}
+#station {
+    z-index: 1;
+    position: absolute;
+    left: 10vw;
+    top: 50%;
+    max-width: 90%;
+    max-height: 40%;
+    display: none;
+}
+
+#time-lapse {
+    color: white;
+}
+
+#station-picture {
+    position: relative;
+    border: 2px solid #b38f00;
+}
+
+#station-info-label {
+    flex: 3;
+    color: white;
+    font-size: 20px;
+}
+
+#station-image {
+    z-index: 1;
+    position: relative;
+    width: 100%;
+    /*object-fit: contain;*/
+}
+
+#current-view {
+    color: #b38f00;
+}
+
+#current-view, #time-lapse {
+    font-size: 15px;
+}
+
+#stationActions {
+    text-align: center;
+}
+
+.wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.item {
+    flex: 1;
+}
+
+#close-station {
+    font-weight: bold;
+    z-index: 999;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 5px 7px 0 0;
+    font-size: 20px;
+    transition: 0.5s;
+}
+
+#close-station:hover {
+    top: 0px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+#station-image-overlay {
+    z-index: 900;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    opacity: 0.7;
+}
+
+#station-frame-parent {
+    height: inherit;
+    width: inherit;
+    position: relative;
+}
+
+#info-btn {
+    flex: 1;
+    text-align: left;
+    color: white;
+    cursor: pointer;
+}
+
+#stationLableWrapper p {
+    margin: 0;
+    padding: 20px 0 5px 0;
+    font-size: 20px;
+}
+
+#station-data {
+    flex: 3;
+    color: white;
+    display: block;
+    margin: auto;
+    padding: 5px;
+}
+#station-data p {
+    margin: 5px 0 3px 0;
+}
+.br {
+    display: block;
+    margin-bottom: 1em;
+}
+#station-data br {
+    margin-bottom: -.2em;
+}
+.station-data-block {
+    margin-bottom: 10px;
+}
+
+.image-overlay-off {
+    display: none;
 }
