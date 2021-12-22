@@ -1,23 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     fetch('./example_places.geojson').then(res => res.json()).then(places => {
-
-
-        const arcsData = [
-            {
-                startLat: 0,
-                startLng: 0,
-                endLat: 90,
-                endLng: 0,
-                color: 'red'
-            },
-            {
-                startLat: 0,
-                startLng: 0,
-                endLat: -90,
-                endLng: 0,
-                color: 'red'
-            }
-        ];
+        
 
         let zoom = { altitude: 2.5 };
         const globe = Globe()
@@ -31,12 +14,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .labelDotRadius(d => Math.sqrt(d.properties.pop_max) * 4e-4)
             .labelColor(() => 'rgba(255, 165, 0, 0.75)')
             .labelResolution(2)
-            .arcsData(arcsData)
-            .arcColor('color')
-            .arcAltitude(0)
-            .arcStroke(1)
-            // .arcDashLength(() => Math.random())
-            .arcDashGap(0)
             .showAtmosphere(true)
             (document.getElementById('globe'))
 
@@ -47,6 +24,64 @@ document.addEventListener("DOMContentLoaded", function () {
         globe.onZoom(v => {
             zoom = v;
         })
-        globe.pointOfView({ lat: 0, lng: 2, altitude: zoom.altitude }, 1000)
+        
+
+        let lng = 0;
+        let isTouched = false;
+        function refresh() {
+            lng = calcNoonMeridian();
+            setTimeout(refresh, 5000);
+
+            const arcsData = [
+                {
+                    startLat: 0,
+                    startLng: lng,
+                    endLat: 90,
+                    endLng: lng,
+                    color: 'red'
+                },
+                {
+                    startLat: 0,
+                    startLng: lng,
+                    endLat: -90,
+                    endLng: lng,
+                    color: 'red'
+                }
+            ];
+
+            globe
+            .arcsData(arcsData)
+            .arcColor('color')
+            .arcAltitude(0)
+            .arcStroke(0.25)
+            // .arcDashLength(() => Math.random())
+            .arcDashGap(0)
+            
+            if(!isTouched) {
+                globe.pointOfView({ lat: 0, lng: lng+10, altitude: zoom.altitude }, 1000)
+                console.log("untouched")
+            }
+            
+        }
+        refresh();
+        globe.onGlobeClick(() => isTouched = true);
     });
+    
 })
+
+function calcNoonMeridian() {
+    var nowUtc = moment().utc();
+
+    let timeEquation = calcTimeEquation(nowUtc.dayOfYear()); 
+
+    let currTimeinH = nowUtc.hour() + nowUtc.minute() / 60 + nowUtc.second() / 3600 ;
+
+    let long = (-180/12) * (currTimeinH + timeEquation - 12);
+
+    return long;
+}
+
+function calcTimeEquation(currDay) {
+    let teq = (-0.171)*Math.sin(0.0337 * currDay + 0.465) - 0.1299*Math.sin(0.01787 * currDay - 0.168);
+    return teq
+}
