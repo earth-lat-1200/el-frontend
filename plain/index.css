@@ -16,6 +16,9 @@ nav {
     padding-left: 8%;
     padding-top: 2em;
     width: 92%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 nav img {
     width: 2.4em;
@@ -28,7 +31,7 @@ nav h1 {
     margin-left: 0.3em;
 }
 nav button {
-    padding-top: 0.5em;
+    padding-top: -0.8em;
     padding-right: 2em;
     color: white;
     font-family: 'MetropolisSemiBold';
@@ -54,19 +57,57 @@ h2 {
     float: right;
     margin-right: 8%;
 }
-#landingHeading {
+.landingHeading {
     position: absolute;
     padding-top: 30vh;
     padding-left: 10vw;
 }
+.landingLinks {
+    display: block;
+    float: right;
+    margin-right: 8%;
+}
 .heading {
-    font-size: 3vw;
+    font-size: calc(2vw + 1vh + 1vmin);
     margin-bottom: 1vw;
 }
 .headingCaption {
     font-family: 'MetropolisLight';
-    font-size: 1.6vw;
+    font-size: calc(1vw + 0.6vh + 0.6vmin);
     margin-top: 0;
+}
+.hamburger {
+    display: none;
+    padding-right: 8%;
+}
+.bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    background-color: white;
+}
+@media (orientation: landscape) {
+}
+@media (orientation: portrait) {
+  .heading {
+      display: none;
+  }
+  .headingCaption {
+      display: none;
+  }
+}
+@media only screen and (max-width: 780px) {
+    .hamburger {
+        display: block;
+        cursor: pointer;
+    }
+    .landingLinks {
+        display: none;
+    }
+
 }
 .blueAccent {
     color: rgb(79, 179, 255);

@@ -4,6 +4,7 @@ let globe;
 document.addEventListener("DOMContentLoaded", function () {
     fetch('./example_places.geojson').then(res => res.json()).then(places => {
 
+
         const arcsData = [
             {
                 startLat: 0,
@@ -50,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
         globe.onZoom(v => {
             zoom = v;
         })
-        globe.pointOfView({ lat: 10, lng: 25, altitude: zoom.altitude }, 1000)
+        setGlobePOV();
     });
 })
 
@@ -65,6 +66,20 @@ loadImage = () => {
         imgEl.src = shownImage;
         divEl.style.display = 'block';
     });
+}
+
+function setGlobePOV() {
+    var lat = 10;
+    var lng = 25;
+    globe.height(window.innerHeight);
+    if (window.innerWidth > window.innerHeight) // landscape
+    {
+        globe.width(calcWidth());
+        globe.pointOfView({ lat, lng, altitude: 2.5 });
+    } else { // portrait
+        globe.width(window.innerWidth);
+        globe.pointOfView({ lat, lng, altitude: 3 });
+    }
 }
 
 onClickClose = () => {
@@ -83,5 +98,6 @@ showStationData = () => {
     }
 }
 
-window.addEventListener('resize', function(event) {
-}, true);
+window.addEventListener('resize', (event) => {
+    setGlobePOV();
+});
