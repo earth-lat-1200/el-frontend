@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     fetch('./example_places.geojson').then(res => res.json()).then(places => {
-        
-
+        let onInit = true;
+        let lng = 0;
         let zoom = { altitude: 2.5 };
+
         const globe = Globe()
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
@@ -25,12 +26,9 @@ document.addEventListener("DOMContentLoaded", function () {
             zoom = v;
         })
         
-
-        let lng = 0;
-        let isTouched = false;
         function refresh() {
             lng = calcNoonMeridian();
-            setTimeout(refresh, 5000);
+            
 
             const arcsData = [
                 {
@@ -54,17 +52,17 @@ document.addEventListener("DOMContentLoaded", function () {
             .arcColor('color')
             .arcAltitude(0)
             .arcStroke(0.25)
-            // .arcDashLength(() => Math.random())
-            .arcDashGap(0)
-            
-            if(!isTouched) {
-                globe.pointOfView({ lat: 0, lng: lng+10, altitude: zoom.altitude }, 1000)
-                console.log("untouched")
-            }
-            
+            .arcDashGap(0)    
+                   
+            console.log(lng);
+            setTimeout(refresh, 5000);
         }
         refresh();
-        globe.onGlobeClick(() => isTouched = true);
+
+        if(onInit) {
+            globe.pointOfView({ lat: 0, lng: lng+10, altitude: zoom.altitude }, 1000)
+            onInit = false;
+        }
     });
     
 })
