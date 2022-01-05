@@ -38,9 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         
         function refresh() {
-            lng = calcNoonMeridian();
-            
-
+            lng = calcNoonMeridian();        
+      
             const arcsData = [
                 {
                     startLat: 0,
@@ -57,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     color: 'red'
                 }
             ];
-
+        
             globe
             .arcsData(arcsData)
             .arcColor('color')
@@ -68,17 +67,20 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(lng);
             setTimeout(refresh, 5000);
         }
+        
         refresh();
 
         if(onInit) {
             globe.pointOfView({ lat: 0, lng: lng+10, altitude: zoom.altitude }, 1000)
             onInit = false;
         }
-        
+
         setGlobePOV();
     });
     
 })
+
+
 
 function calcNoonMeridian() {
     var nowUtc = moment().utc();
