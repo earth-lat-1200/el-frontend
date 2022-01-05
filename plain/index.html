@@ -6,10 +6,76 @@
     <meta name="apple-mobile-web-app-capable" content="yes"/>
     <base href="./">
     <title>EarthLAT</title>
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/metropolis" type="text/css"/>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-<div id="globe"></div>
+
+<div class="container">
+    <div id="globe"></div>
+    <nav class="navbar">
+        <div>
+            <img class="navLogo" src="./logo-500px.png">
+            <h1>EarthLAT <span class="blueAccent">1200</span></h1>
+        </div>
+
+        <div class="landingLinks">
+            <button>Explore</button>
+            <button>About</button>
+            <a href="mailto:contact@earthlat1200.org">
+                <button>Contact</button>
+            </a>
+            <button>Join</button>
+        </div>
+        <div class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+    </nav>
+    <div class="landingHeading">
+        <h1 class="heading">EarthLAT <span class="blueAccent">1200</span></h1>
+        <h2 class="headingCaption">watch the rotating earth.</h2>
+    </div>
+    <div id="station">
+        <div id="station-frame-parent">
+            <div id="close-station" class="image-overlay-off" onclick="onClickClose()">X</div>
+            <div id="station-picture">
+                <img id="station-image">
+                <div id="station-image-overlay" class="wrapper image-overlay-off">
+                    <span class="item"></span>
+                    <div id="station-data">
+                        <p>Location: Atzenhain, Germany</p>
+                        <p>50°38´53´´N 8°59´15´´E</p>
+                        <span class="br"></span>
+                        <p>Webcam: RaspberryPI+Cam</p>
+                        <p>Transfer: RaspberryPI</p>
+                        <span class="br"></span>
+                        <p>Description: empiric drawn vertical sundial showing clock time.</p>
+                        <span class="br"></span>
+                        <p>Website:</p>
+                        <span class="br"></span>
+                        <p>Team: Gerhard and Matheus Benna</p>
+                    </div>
+                </div>
+            </div>
+            <div id="stationActions">
+                <div id="station-label-wrapper" class="wrapper">
+                    <span class="item"></span>
+                    <p id="station-info-label">Bennauhr - Atzenhain, Germany</p>
+                    <p id="info-btn" onclick="showStationData()">i</p>
+                </div>
+                <div class="wrapper">
+                    <span class="item"></span>
+                    <p id="current-view" class="item">current view</p>
+                    <p id="time-lapse" class="item">time lapse</p>
+                    <span class="item"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" src="index.js"></script>
 <script src="//unpkg.com/globe.gl"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
