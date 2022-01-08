@@ -1,16 +1,48 @@
 let shownImage;
 let globe;
+let stations = [];
+let activeStation = {};
 const DEFAULT_LANDSCAPE_ALTITUDE = 2.5;
 const DEFAULT_PORTRAIT_ALTITUDE = 3;
 const MINIMUM_ALTITUDE = 4;
+const functionsKey = 'HyJtZJmOtyCdwcWZnQwvGyHGUEoyp/0NYR3iZ56qvM2s0i2TQleTCQ==';
 
-function triggerResize() {
-    window.dispatchEvent(new Event('resize'));
+function getFeatures(stations) {
+    console.log(stations);
+
+    let index = 0;
+
+    return stations.map(station => {
+        return {
+            "type": "Feature",
+            "properties": {
+                "id": index++,
+                "name": station.stationName,
+                "latitude": station.latitude,
+                "longitude": station.longitude,
+                "pop_max": 2189000,
+                "pop_min": 229398,
+                "pop_other": 1149981,
+            }
+        };
+    });
+}
+
+function getStations() {
+    return fetch("https://staging-earth-lat-1200-api.azurewebsites.net/api/GetAllStations", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-functions-key': functionsKey
+        }
+    }).then(res => res.json()).then(s => {
+        stations = s.result.value;
+    })
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    fetch('./example_places.geojson').then(res => res.json()).then(places => {
-
+    getStations().then(() => {
+        let features = getFeatures(stations);
 
         const arcsData = [
             {
@@ -29,13 +61,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         ];
 
+
         let zoom = {altitude: 2.5};
         globe = Globe()
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
             .width(calcWidth())
             .height(window.innerHeight)
-            .labelsData(places.features)
+            .labelsData(features)
             .labelLat(d => d.properties.latitude)
             .labelLng(d => d.properties.longitude)
             .labelText(d => d.properties.name)
@@ -52,7 +85,10 @@ document.addEventListener("DOMContentLoaded", function () {
             .showAtmosphere(true)
             (document.getElementById('globe'))
 
-        globe.onLabelClick((label, event) => {
+        globe.onLabelClick((feature, event) => {
+            activeStation = stations[feature.properties.id];
+            let stationInfoLabelEl = document.getElementById("station-info-label");
+            stationInfoLabelEl.innerHTML = `${activeStation.stationName} - ${activeStation.location}`;
             loadImage();
         })
         globe.onZoom(v => {
@@ -74,24 +110,42 @@ function calcHeight() {
     return window.innerHeight * multiplier;
 }
 
+
+function getStationPicture() {
+
+    return fetch(`https://staging-earth-lat-1200-api.azurewebsites.net/api/GetLatestDetailImageById?id=${activeStation.stationId}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-functions-key': functionsKey
+        }
+    }).then(res => res.json())
+        .then(res => 'data:image/jpeg;base64,' + res.value.img)
+}
+
 loadImage = () => {
     const imgEl = document.getElementById('station-image');
     const divEl = document.getElementById('station');
-    fetch('./example_station.png').then(res => res.blob()).then(resImg => {
-        shownImage = URL.createObjectURL(resImg);
-        imgEl.src = shownImage;
-        divEl.style.display = 'block';
-        imgEl.style.objectFit = 'contain';
-        // UGLY solution, couldn't find an alternative yet
-        setTimeout(function () {
-            triggerResize();
-            triggerResize();
-            triggerResize();
-        }, 100);
-    });
+    // fetch('./example_station.png').then(res => res.blob()).then(resImg => {
+    getStationPicture()
+        .then(resImg => {
+            console.log(resImg)
+            // shownImage = URL.createObjectURL(resImg);
+            imgEl.setAttribute(
+                'src', resImg
+            );
+            divEl.style.display = 'block';
+            imgEl.style.objectFit = 'contain';
+            // UGLY solution, couldn't find an alternative yet
+            setTimeout(function () {
+                setGlobePOV(true);
+                setGlobePOV(true);
+                setGlobePOV(true);
+            }, 100);
+        });
 }
 
-function setGlobePOV() {
+function setGlobePOV(currentAltitude) {
     var lat = 10;
     var lng = 25;
     globe.height(window.innerHeight);
@@ -108,11 +162,12 @@ function setGlobePOV() {
         globe.width(window.innerWidth);
         altitude = window.innerWidth < 550 ? MINIMUM_ALTITUDE : DEFAULT_PORTRAIT_ALTITUDE;
     }
-    globe.pointOfView({lat, lng, altitude: altitude});
+    globe.pointOfView({lat, lng, altitude: currentAltitude ? globe.pointOfView().altitude : altitude});
 }
 
 resizeStationInfoPortrait = () => {
     const stationEl = document.getElementById('station');
+    stationEl.setAttribute('max-width', '90%')
     const stationWidth = stationEl.offsetWidth;
     stationEl.style.left = `${(window.innerWidth - stationWidth) / 2}px`;
     stationEl.style.top = 'auto';
@@ -134,12 +189,28 @@ onClickClose = () => {
     }
 }
 
+function displayActiveStationData() {
+    let stationLocationEl = document.getElementById("station-location");
+    stationLocationEl.innerHTML = `Location: ${activeStation.location}`;
+    let stationWebcamType = document.getElementById("station-webcamType");
+    stationWebcamType.innerHTML = `Webcam: ${activeStation.webcamType}`;
+    let stationTransferType = document.getElementById("station-transferType");
+    stationTransferType.innerHTML = `Transfer: ${activeStation.transferType}`;
+    let stationDescription = document.getElementById("station-description");
+    stationDescription.innerHTML = `Sundial name: ${activeStation.sundialName}, sundial info: ${activeStation.sundialInfo}`;
+    let stationWebsite = document.getElementById("station-website");
+    stationWebsite.innerHTML = `Website: ${activeStation.websiteUrl}`;
+    let stationTeamName = document.getElementById("station-teamName");
+    stationTeamName.innerHTML = `Team: ${activeStation.teamName}`;
+}
+
 showStationData = () => {
     const overlays = document.getElementsByClassName('image-overlay-off');
     while (overlays.length > 0) {
         overlays[0].classList.add('image-overlay');
         overlays[0].classList.remove('image-overlay-off');
     }
+    displayActiveStationData();
 }
 
 window.addEventListener('resize', (event) => {
