@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let lng = 0;
         let zoom = { altitude: 2.5 };
 
-        const globe = Globe()
+        globe = Globe()
             .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
             .width(calcWidth())
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .arcsData(arcsData)
             .arcColor('color')
             .arcAltitude(0)
-            .arcStroke(0.25)
+            .arcStroke(1)
             .arcDashGap(0)    
                    
             console.log(lng);
