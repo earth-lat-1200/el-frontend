@@ -92,6 +92,9 @@ h2 {
 @media (orientation: landscape) {
 }
 @media (orientation: portrait) {
+    #station {
+        max-height: 50%!important;
+    }
   .heading {
       display: none;
   }
@@ -127,7 +130,7 @@ h2 {
     position: absolute;
     left: 10vw;
     top: 50%;
-    max-width: 90%;
+    max-width: 40%;
     max-height: 40%;
     display: none;
 }
@@ -151,7 +154,7 @@ h2 {
     z-index: 1;
     position: relative;
     width: 100%;
-    /*object-fit: contain;*/
+    object-fit: contain;
 }
 
 #current-view {
