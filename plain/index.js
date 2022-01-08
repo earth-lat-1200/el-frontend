@@ -8,8 +8,6 @@ const MINIMUM_ALTITUDE = 4;
 const functionsKey = 'HyJtZJmOtyCdwcWZnQwvGyHGUEoyp/0NYR3iZ56qvM2s0i2TQleTCQ==';
 
 function getFeatures(stations) {
-    console.log(stations);
-
     let index = 0;
 
     return stations.map(station => {
@@ -40,6 +38,20 @@ function getStations() {
     })
 }
 
+function getClosestStation(){
+    const nullMeridian = calcNoonMeridian();
+    const currentLongitude = nullMeridian; 
+    const result = stations.reduce((prev, curr) => {
+
+        const distanceCurr = curr.longitude - currentLongitude;
+        const distancePrev = prev.longitude - currentLongitude;
+        
+        return Math.abs(distanceCurr) < Math.abs(distancePrev) && distanceCurr > currentLongitude ? curr : prev;
+    }, {longitude : -20000.00});
+
+    return result;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     getStations().then(() => {
         let features = getFeatures(stations);
@@ -62,12 +74,14 @@ document.addEventListener("DOMContentLoaded", function () {
             .labelResolution(2)
             .showAtmosphere(true)
             (document.getElementById('globe'))
-
+        activeStation = getClosestStation();
+        loadImage();
         globe.onLabelClick((feature, event) => {
             activeStation = stations[feature.properties.id];
             let stationInfoLabelEl = document.getElementById("station-info-label");
             stationInfoLabelEl.innerHTML = `${activeStation.stationName} - ${activeStation.location}`;
             loadImage();
+
         })
         globe.onZoom(v => {
             zoom = v;
@@ -100,6 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .arcStroke(1)
             .arcDashGap(0)
 
+            //getClosestStation();
             console.log(lng);
             setTimeout(refresh, 5000);
         }
@@ -149,14 +164,14 @@ function calcHeight() {
 
 function getStationPicture() {
 
-    return fetch(`https://staging-earth-lat-1200-api.azurewebsites.net/api/GetLatestDetailImageById?id=${activeStation.stationId}`, {
+    return fetch(`https://staging-earth-lat-1200-api.azurewebsites.net/api/GetLatestTotalImageById?id=${activeStation.stationId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'x-functions-key': functionsKey
         }
     }).then(res => res.json())
-        .then(res => 'data:image/jpeg;base64,' + res.value.img)
+        .then(res => 'data:image/jpeg;base64,' + res.result.value.img)
 }
 
 loadImage = () => {
@@ -164,8 +179,7 @@ loadImage = () => {
     const divEl = document.getElementById('station');
     getStationPicture()
         .then(resImg => {
-            console.log(resImg)
-            // shownImage = URL.createObjectURL(resImg);
+            displayActiveStationData();
             imgEl.setAttribute(
                 'src', resImg
             );
@@ -197,7 +211,9 @@ function setGlobePOV(currentAltitude) {
         globe.width(window.innerWidth);
         altitude = window.innerWidth < 550 ? MINIMUM_ALTITUDE : DEFAULT_PORTRAIT_ALTITUDE;
     }
-    globe.pointOfView({lat, lng, altitude: currentAltitude ? globe.pointOfView().altitude : altitude});
+    if(!currentAltitude){
+        globe.pointOfView({lat, lng, altitude});
+    }
 }
 
 resizeStationInfoPortrait = () => {
@@ -244,7 +260,6 @@ showStationData = () => {
         overlays[0].classList.add('image-overlay');
         overlays[0].classList.remove('image-overlay-off');
     }
-    displayActiveStationData();
 }
 
 window.addEventListener('resize', (event) => {
