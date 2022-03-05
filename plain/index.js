@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let lng = 0;
         let zoom = { altitude: 2.5 };
         globe = Globe()
-            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
             .width(calcWidth())
             .height(window.innerHeight)
