@@ -57,7 +57,6 @@ h2 {
 }
 #landingLinks {
     float: right;
-    margin-right: 8%;
 }
 .landingHeading {
     position: absolute;
@@ -67,7 +66,6 @@ h2 {
 .landingLinks {
     display: block;
     float: right;
-    margin-right: 8%;
 }
 .heading {
     font-size: calc(2vw + 1vh + 1vmin);
@@ -80,7 +78,6 @@ h2 {
 }
 .hamburger {
     display: none;
-    padding-right: 8%;
 }
 .bar {
     display: block;
@@ -106,10 +103,11 @@ h2 {
 }
 @media only screen and (max-width: 780px) {
     .hamburger {
+        z-index: 2;
         display: block;
         cursor: pointer;
         position: fixed;
-        right: 25px;
+        right: 2em;
     }
     .landingLinks {
         display: none;
@@ -120,13 +118,19 @@ h2 {
         display: flex;
         flex-direction: column;
         position: fixed;
-        right: -10px;
+        right: 0;
         top: 80px;
         align-items: flex-end;
+        
     }
 
     .open.landingLinks a:not(:last-child) {
         padding-bottom: 1em;
+    }
+
+    .navbar a {
+        text-decoration: underline;
+        text-decoration-color: white;
     }
 
 }
@@ -336,7 +340,6 @@ ul {
 
 html {
   font-family: 'DM Sans', sans-serif;
-  font-size: 10px;
   box-sizing: border-box;
 }
 
