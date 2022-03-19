@@ -125,6 +125,9 @@ h2 {
 .blueAccent {
     color: rgb(79, 179, 255);
 }
+.yellowAccent {
+    color: #d09f0c;
+}
 #station {
     z-index: 1;
     position: absolute;
@@ -141,7 +144,6 @@ h2 {
 
 #station-picture {
     position: relative;
-    border: 2px solid #b38f00;
 }
 
 #station-info-label {

@@ -26,6 +26,21 @@ function getFeatures(stations) {
     });
 }
 
+function getMarkerData(stations) {
+    let index = 0;
+    return stations.map(station => {
+        return {
+            id: index++,
+            name: station.stationName,
+            location: station.location,
+            lat: station.latitude,
+            lng: station.longitude,
+            size: 20,
+            color : 'red'
+        };
+    });
+}
+
 function getStations() {
     return fetch("https://staging-earth-lat-1200-api.azurewebsites.net/api/GetAllStations", {
         method: 'GET',
@@ -55,6 +70,12 @@ function getClosestStation(){
 document.addEventListener("DOMContentLoaded", function () {
     getStations().then(() => {
         let features = getFeatures(stations);
+        let gData = getMarkerData(stations);
+
+        const markerSvg = `<svg viewBox="-4 0 36 36">
+            <path fill="currentColor" d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z"></path>
+            <circle fill="black" cx="14" cy="14" r="7"></circle>
+        </svg>`;
 
         let onInit = true;
         let lng = 0;
@@ -64,15 +85,27 @@ document.addEventListener("DOMContentLoaded", function () {
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
             .width(calcWidth())
             .height(window.innerHeight)
-            .labelsData(features)
-            .labelLat(d => d.properties.latitude)
-            .labelLng(d => d.properties.longitude)
-            .labelText(d => d.properties.name)
-            .labelSize(d => Math.sqrt(d.properties.pop_max) * 4e-4)
-            .labelDotRadius(d => Math.sqrt(d.properties.pop_max) * 4e-4)
-            .labelColor(() => 'rgba(255, 165, 0, 0.75)')
-            .labelResolution(2)
+            //.labelsData(features)
+            //.labelLat(d => d.properties.latitude)
+            //.labelLng(d => d.properties.longitude)
+            //.labelText(d => d.properties.name)
+            //.labelSize(d => Math.sqrt(d.properties.pop_max) * 4e-4)
+            //.labelDotRadius(d => Math.sqrt(d.properties.pop_max) * 4e-4)
+            //.labelColor(() => 'rgba(255, 165, 0, 0.75)')
+            //.labelResolution(2)
             .showAtmosphere(true)
+            .htmlElementsData(gData)
+            .htmlElement(d => {
+              const el = document.createElement('div');
+              el.innerHTML = markerSvg;
+              el.style.color = d.color;
+              el.style.width = `${d.size}px`;
+        
+              el.style['pointer-events'] = 'auto';
+              el.style.cursor = 'pointer';
+              el.onclick = () => console.info(d);
+              return el;
+            })
             (document.getElementById('globe'))
         activeStation = getClosestStation();
         loadImage();
@@ -96,14 +129,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     startLng: lng,
                     endLat: 90,
                     endLng: lng,
-                    color: 'red'
+                    color: "#d09f0c"
                 },
                 {
                     startLat: 0,
                     startLng: lng,
                     endLat: -90,
                     endLng: lng,
-                    color: 'red'
+                    color: "#d09f0c"
                 }
             ];
 
