@@ -268,4 +268,5 @@ window.addEventListener('resize', (event) => {
 
 function toggleMobileMenu(menu) {
     menu.classList.toggle('open');
+    document.getElementById("landingLinks").classList.toggle('open');
 }

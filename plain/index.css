@@ -9,7 +9,7 @@ body {
     color: white;
     font-family: 'MetropolisLight';
 }
-nav {
+.navbar {
     position: absolute;
     top: 0;
     left: 0;
@@ -20,17 +20,17 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
-nav img {
+.navbar img {
     width: 2.4em;
 }
-nav h1 {
+.navbar h1 {
     margin: 0;
     top: -0.4em;
     font-size: 1.5em;
     left: 0;
     margin-left: 0.3em;
 }
-nav button {
+.navbar a {
     padding-top: -0.8em;
     padding-right: 2em;
     color: white;
@@ -40,8 +40,10 @@ nav button {
     border-radius: 0;
     box-shadow: none;
     font-size: 1.2em;
+    text-decoration: none;
+    cursor: pointer;
 }
-nav button:hover {
+.navbar a:hover {
     color: #cfeaff;
 }
 h1 {
@@ -106,9 +108,21 @@ h2 {
     .hamburger {
         display: block;
         cursor: pointer;
+        position: fixed;
+        right: 25px;
     }
     .landingLinks {
         display: none;
+    }
+
+    open landingLinks {
+        display: block;
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        right: -10px;
+        top: 80px;
+        align-items: flex-end;
     }
 
 }
@@ -266,13 +280,12 @@ h2 {
     opacity: 0;
 }
 .open .bar3 {
-    -webkit-transform: rotate(45deg) translate(-7px, -6px);
-    transform: rotate(45deg) translate(-7px, -6px);
+    -webkit-transform: rotate(45deg) translate(-5px, -6px);
+    transform: rotate(45deg) translate(-5px, -6px);
 }
 .open .mobile-menu {
     display: flex;
     flex-direction: column;
-    align-items: left;
     justify-content: flex-start;
 
 }
@@ -286,14 +299,12 @@ h2 {
 }
 .mobile-menu li {
     margin-bottom: 10px;
-    align-items: right;
+    align-self: flex-end;
+    padding-right: 20px;
 }
 ul {
     list-style: none;
     height: 100%;
-    display: flex;
-    align-items: left;
-    justify-content: space-around;
   }
   
   ul a {
