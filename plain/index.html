@@ -1,91 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0"/>
-    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <base href="./">
+    <script type="text/javascript" src="index.js"></script>
+    <script src="//unpkg.com/globe.gl"></script>
+    <script src="https://momentjs.com/downloads/moment.js"></script>
+    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+
     <title>EarthLAT</title>
-    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/metropolis" type="text/css"/>
+    <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/metropolis" type="text/css" />
     <link rel="stylesheet" href="index.css">
+
 </head>
+
 <body>
+    <div class="container">
+        <div id="globe"></div>
+        <nav class="navbar">
+            <div>
+                <img class="navLogo" src="./resources/logo-500px.png">
+                <h1>EarthLAT <span class="blueAccent">1200</span></h1>
+            </div>
 
-<div class="container">
-    <div id="globe"></div>
-    <nav class="navbar">
-        <div>
-            <img class="navLogo" src="./logo-500px.png">
-            <h1>EarthLAT <span class="blueAccent">1200</span></h1>
+            <div class="landingLinks">
+                <button>Explore</button>
+                <a href="about.html">
+                <button>About</button>
+                </a>
+                <a href="mailto:contact@earthlat1200.org">
+                    <button>Contact</button>
+                </a>
+                <button>Join</button>
+            </div>
+            <div class="hamburger" onclick="toggleMobileMenu(this)">
+                <span class="bar bar1"></span>
+                <span class="bar bar2"></span>
+                <span class="bar bar3"></span>
+                <ul class="mobile-menu">
+                    <li><a href"#">Explore</a></li>
+                    <li><a href"#">About</a></li>
+                    <li><a href="mailto:contact@earthlat1200.org">
+                        Contact
+                    </a></li>
+                    <li><a href"#">Join</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="landingHeading">
+            <h1 class="heading">EarthLAT <span class="blueAccent">1200</span></h1>
+            <h2 class="headingCaption">watch the rotating earth.</h2>
         </div>
-
-        <div class="landingLinks">
-            <button>Explore</button>
-            <button>About</button>
-            <a href="mailto:contact@earthlat1200.org">
-                <button>Contact</button>
-            </a>
-            <button>Join</button>
-        </div>
-        <div class="hamburger" onclick="toggleMobileMenu(this)">
-            <span class="bar bar1"></span>
-            <span class="bar bar2"></span>
-            <span class="bar bar3"></span>
-            <ul class="mobile-menu">
-                <li><a href"#">Explore</a></li>
-                <li><a href"#">About</a></li>
-                <li><a href="mailto:contact@earthlat1200.org">
-                    Contact
-                </a></li>
-                <li><a href"#">Join</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="landingHeading">
-        <h1 class="heading">EarthLAT <span class="blueAccent">1200</span></h1>
-        <h2 class="headingCaption">watch the rotating earth.</h2>
-    </div>
-    <div id="station">
-        <div id="station-frame-parent">
-            <div id="close-station" class="image-overlay-off" onclick="onClickClose()">X</div>
-            <div id="station-picture">
-                <img id="station-image">
-                <div id="station-image-overlay" class="wrapper image-overlay-off">
-                    <span class="item"></span>
-                    <div id="station-data">
-                        <p id="station-location">Location: Atzenhain, Germany</p>
-                        <p>50°38´53´´N 8°59´15´´E</p>
-                        <span class="br"></span>
-                        <p id="station-webcamType">Webcam: RaspberryPI+Cam</p>
-                        <p id="station-transferType">Transfer: RaspberryPI</p>
-                        <span class="br"></span>
-                        <p id="station-description">Description: empiric drawn vertical sundial showing clock time.</p>
-                        <span class="br"></span>
-                        <p id="station-website">Website:</p>
-                        <span class="br"></span>
-                        <p id="station-teamName">Team: Gerhard and Matheus Benna</p>
+        <div id="station">
+            <div id="station-frame-parent">
+                <div id="close-station" class="image-overlay-off" onclick="onClickClose()">X</div>
+                <div id="station-picture">
+                    <img id="station-image">
+                    <div id="station-image-overlay" class="wrapper image-overlay-off">
+                        <span class="item"></span>
+                        <div id="station-data">
+                            <p id="station-location">Location: Atzenhain, Germany</p>
+                            <p>50°38´53´´N 8°59´15´´E</p>
+                            <span class="br"></span>
+                            <p id="station-webcamType">Webcam: RaspberryPI+Cam</p>
+                            <p id="station-transferType">Transfer: RaspberryPI</p>
+                            <span class="br"></span>
+                            <p id="station-description">Description: empiric drawn vertical sundial showing clock time.
+                            </p>
+                            <span class="br"></span>
+                            <p id="station-website">Website:</p>
+                            <span class="br"></span>
+                            <p id="station-teamName">Team: Gerhard and Matheus Benna</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="stationActions">
+                    <div id="station-label-wrapper" class="wrapper">
+                        <span class="item"></span>
+                        <p id="station-info-label">Bennauhr - Atzenhain, Germany</p>
+                        <p id="info-btn" onclick="showStationData()">i</p>
+                    </div>
+                    <div class="wrapper">
+                        <span class="item"></span>
+                        <p id="current-view" class="item">current view</p>
+                        <p id="time-lapse" class="item">time lapse</p>
+                        <span class="item"></span>
                     </div>
                 </div>
             </div>
-            <div id="stationActions">
-                <div id="station-label-wrapper" class="wrapper">
-                    <span class="item"></span>
-                    <p id="station-info-label">Bennauhr - Atzenhain, Germany</p>
-                    <p id="info-btn" onclick="showStationData()">i</p>
-                </div>
-                <div class="wrapper">
-                    <span class="item"></span>
-                    <p id="current-view" class="item">current view</p>
-                    <p id="time-lapse" class="item">time lapse</p>
-                    <span class="item"></span>
-                </div>
-            </div>
-        </div>
     </div>
-</div>
-
-<script type="text/javascript" src="index.js"></script>
-<script src="//unpkg.com/globe.gl"></script>
-<script src="https://momentjs.com/downloads/moment.js"></script>
 </body>
 </html>
