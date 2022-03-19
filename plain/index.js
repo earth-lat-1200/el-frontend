@@ -265,3 +265,7 @@ showStationData = () => {
 window.addEventListener('resize', (event) => {
     setGlobePOV();
 });
+
+function toggleMobileMenu(menu) {
+    menu.classList.toggle('open');
+}
