@@ -20,19 +20,17 @@
 </head>
 
 <body>
-
-
     <div class="container">
         <div id="globe"></div>
         <nav class="navbar">
             <div>
-                <img class="navLogo" src="./logo-500px.png">
+                <img class="navLogo" src="./resources/logo-500px.png">
                 <h1>EarthLAT <span class="blueAccent">1200</span></h1>
             </div>
 
             <div class="landingLinks">
                 <button>Explore</button>
-                <a href="#about"></a>
+                <a href="about.html">
                 <button>About</button>
                 </a>
                 <a href="mailto:contact@earthlat1200.org">
@@ -40,120 +38,61 @@
                 </a>
                 <button>Join</button>
             </div>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <div class="hamburger" onclick="toggleMobileMenu(this)">
+                <span class="bar bar1"></span>
+                <span class="bar bar2"></span>
+                <span class="bar bar3"></span>
+                <ul class="mobile-menu">
+                    <li><a href"#">Explore</a></li>
+                    <li><a href"#">About</a></li>
+                    <li><a href="mailto:contact@earthlat1200.org">
+                        Contact
+                    </a></li>
+                    <li><a href"#">Join</a></li>
+                </ul>
             </div>
         </nav>
         <div class="landingHeading">
             <h1 class="heading">EarthLAT <span class="blueAccent">1200</span></h1>
             <h2 class="headingCaption">watch the rotating earth.</h2>
         </div>
-        <div class="hamburger" onclick="toggleMobileMenu(this)">
-            <span class="bar bar1"></span>
-            <span class="bar bar2"></span>
-            <span class="bar bar3"></span>
-            <ul class="mobile-menu">
-                <li><a href"#">Explore</a></li>
-                <li><a href"#">About</a></li>
-                <li><a href="mailto:contact@earthlat1200.org">
-                    Contact
-                </a></li>
-                <li><a href"#">Join</a></li>
-            </ul>
-        </div>
-    </div>
-    <div id="about" class="container">
-        <h1 class="heading">About <span class="blueAccent">this Project</span></h1>
-        <div class="accordion">
-            <div class="accordion-item" id="about1">
-                <a class="accordion-link" href="#about1">
-                    <div class="flex">
-                        <h3>Aim</h3>
+        <div id="station">
+            <div id="station-frame-parent">
+                <div id="close-station" class="image-overlay-off" onclick="onClickClose()">X</div>
+                <div id="station-picture">
+                    <img id="station-image">
+                    <div id="station-image-overlay" class="wrapper image-overlay-off">
+                        <span class="item"></span>
+                        <div id="station-data">
+                            <p id="station-location">Location: Atzenhain, Germany</p>
+                            <p>50°38´53´´N 8°59´15´´E</p>
+                            <span class="br"></span>
+                            <p id="station-webcamType">Webcam: RaspberryPI+Cam</p>
+                            <p id="station-transferType">Transfer: RaspberryPI</p>
+                            <span class="br"></span>
+                            <p id="station-description">Description: empiric drawn vertical sundial showing clock time.
+                            </p>
+                            <span class="br"></span>
+                            <p id="station-website">Website:</p>
+                            <span class="br"></span>
+                            <p id="station-teamName">Team: Gerhard and Matheus Benna</p>
+                        </div>
                     </div>
-                    <i class="icon ion-md-arrow-forward"></i>
-                    <i class="icon ion-md-arrow-down"></i>
-                </a>
-                <div class="answer">
-                    <p> As the earth rotates we can see the virtual movement of the sun across the sky. The aim of the
-                        project Earth L.A.T. 12:00 is to visualize this movement.<br>
-                    <p>The local apparent time (LAT) 12:00 is defined as the time the sun appears on the local south
-                        meridian – at which point the sun is located directly above / the suns station is at its
-                        south-most point. Sundials show LAT by the moving shadow. They are a measure of time since
-                        thousands of years.</p>
-                    <p> Our goal is to produce a 24/7 live video stream of shadows crossing the 12:00 line all over the
-                        world. Every few minutes the live stream switches to the next sundial – so one can follow LAT
-                        12:00 as the earth rotates and to get a real sense of our spinning globe.</p>
-                    <p>Anyone can start a sundial which is basically a stick casting a shadow on a flat surface. The
-                        hardware required to do this could be e.g. a RaspberryPI+Cam (U$ 100 + U$ 5/month for transfer
-                        costs). The system also has to be correctly set up and programmed. The images are then
-                        transferred via FTP to the server, which automatically selects the displayed image.</p>
                 </div>
-                <hr>
-            </div>
-            <div class="accordion-item" id="about2">
-                <a class="accordion-link" href="#about2">
-                    <div class="flex">
-                        <h3>Watch the Rotating Earth - How?</h3>
+                <div id="stationActions">
+                    <div id="station-label-wrapper" class="wrapper">
+                        <span class="item"></span>
+                        <p id="station-info-label">Bennauhr - Atzenhain, Germany</p>
+                        <p id="info-btn" onclick="showStationData()">i</p>
                     </div>
-                    <i class="icon ion-md-arrow-forward"></i>
-                    <i class="icon ion-md-arrow-down"></i>
-                </a>
-                <div class="answer">
-                    <p>We stand on a globe which is rotating around its own axis and which is orbiting the sun (that's
-                        common sense - but there are some people who are not sure about it). Because the earth is that
-                        huge in relation to our bodies and most of our direct environment - desks, trees, houses,
-                        mountains, rivers, etc. - which takes the same movement as us we we hardly realize the rotation.
-                    </p>
-                    <p>Yes, we can figure out the rotation by numbers: The earth has a diameter of some 12 700 km/7 900
-                        mi; one 360° rotation takes 23 h 56 min 04 sec; it takes a year for one orbit around the sun; at
-                        the equator the rotation speed is supersonic and at the pole it is zero.</p>
-                    <p>But this numbers will not really give us the sense.</p>
-                    <p>Let's take a telescope, fix it to the ground and look through it straight to the sky. The Saturn
-                        stays almost still in space within this short period of time - just the telescope moves by the
-                        rotation of the earth. What we can see is this: <br> <img src="./saturn.gif" width="300"
-                            class="pull-right"></p>
-                    <p>You need to have a telescope to be able to realize the movement - or this site.</p>
-                    <p>You can view this rotation by watching moving shadows caused by moving light sources. This
-                        appears to us as a moving shadow cast by a stick fixed in position illuminated by a moving light
-                        source. I fact, however, it is the sun which is stationary and the stick, which is attached to
-                        the surface of the earth, that is moving.</p>
-                    <p>We can observe something like this:</p>
-                    <p><iframe src="https://www.youtube.com/embed/KKkzwlrfFI0" width="400" frameborder="0"
-                            allowfullscreen="allowfullscreen"></iframe></p>
-                    <p>It is precisely this movement that we want to show. To give you a live imagination of sundials
-                        around the world - each of them displays 12:00 L.A.T. in real time. After a few minutes
-                        automatically the live view switches to the next-westerly sundial. With enought partners
-                        worldwide you can watch sundials 24 h per day/7 days a week each showing high noon at their
-                        respective location.</p>
-                </div>
-                <hr>
-            </div>
-            <div class="accordion-item" id="about3">
-                <a class="accordion-link" href="#about3">
-                    <div class="flex">
-                        <h3>Local Team</h3>
+                    <div class="wrapper">
+                        <span class="item"></span>
+                        <p id="current-view" class="item">current view</p>
+                        <p id="time-lapse" class="item">time lapse</p>
+                        <span class="item"></span>
                     </div>
-                    <i class="icon ion-md-arrow-forward"></i>
-                    <i class="icon ion-md-arrow-down"></i>
-                </a>
-                <div class="answer">
-                    <p>The project is driven by a non-profit organization. Founder and head of this organization is Kurt
-                        Niel, Grieskirchen, Austria. He is lecturer at the University of Applied Sciences Upper Austria
-                        and holds a professorship in industrial machine vision, and is head of the department metrology
-                        and control engineering. Topics in astronomy and sundials are his beside interests.</p>
-                    <p>Further part time members deal with website design and implementation (Michael Mayrhofer, Julian
-                        Zeilinger, HTL Grieskirchen), and public relations with upper Austrian schools or international
-                        social media channels.</p>
-                    <p>The team as “ARGE Earth LAT 1200” (Barbara Egger, Klaus Aigner, Josef Doppelbauer, HTL
-                        Grieskirchen and Kurt Niel) is granted a promotion by the Upper Austrian and Austrian government
-                        including grants from the European Union. This grant is used for promotion in social media
-                        channels and production of information material.</p>
                 </div>
-                <hr>
             </div>
-        </div>
     </div>
 </body>
 </html>
