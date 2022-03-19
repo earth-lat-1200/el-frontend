@@ -42,7 +42,7 @@ nav button {
     font-size: 1.2em;
 }
 nav button:hover {
-    color: #cfeaff;
+    color: white;
 }
 h1 {
     font-family: 'MetropolisSemiBold';
@@ -112,6 +112,21 @@ h2 {
     }
 
 }
+
+@media only screen and (max-width: 850px) {
+    #station{
+    /* z-index: 1; */
+    position: absolute;
+    /* left: 10vw; */
+    /* top: 50%; */
+    /* max-width: 40%; */
+    max-height: 40%;
+    display: block;
+    bottom: 5px;
+
+    }
+
+}
 @media only screen and (max-width: 500px) {
     #station-info-label {
         font-size: 15px!important;
@@ -132,7 +147,8 @@ h2 {
     top: 50%;
     max-width: 40%;
     max-height: 40%;
-    display: none;
+    display: block;
+    bottom: 5px;
 }
 
 #time-lapse {
@@ -217,11 +233,12 @@ h2 {
 #info-btn {
     flex: 1;
     text-align: left;
-    color: white;
+    color: #eeb353;
     cursor: pointer;
+    font-size: large;
 }
 
-#stationLableWrapper p {
+#station-label-wrapper p {
     margin: 0;
     padding: 20px 0 5px 0;
     font-size: 20px;
@@ -321,7 +338,6 @@ ul {
 
 html {
   font-family: 'DM Sans', sans-serif;
-  font-size: 10px;
   box-sizing: border-box;
 }
 
