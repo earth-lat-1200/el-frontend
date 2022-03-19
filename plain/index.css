@@ -115,14 +115,18 @@ h2 {
         display: none;
     }
 
-    open landingLinks {
-        display: block;
+    .open.landingLinks {
+        
         display: flex;
         flex-direction: column;
         position: fixed;
         right: -10px;
         top: 80px;
         align-items: flex-end;
+    }
+
+    .open.landingLinks a:not(:last-child) {
+        padding-bottom: 1em;
     }
 
 }
