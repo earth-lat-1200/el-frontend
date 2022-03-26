@@ -280,8 +280,10 @@ updateActiveStationData = () => {
     stationWebcamType.innerHTML = `Webcam: ${activeStation.webcamType}`;
     let stationTransferType = document.getElementById("station-transferType");
     stationTransferType.innerHTML = `Transfer: ${activeStation.transferType}`;
-    let stationDescription = document.getElementById("station-description");
-    stationDescription.innerHTML = `Sundial name: ${activeStation.sundialName}, sundial info: ${activeStation.sundialInfo}`;
+    let sundialDescription = document.getElementById("sundial-name");
+    sundialDescription.innerHTML = `Sundial name: ${activeStation.sundialName}`;
+    let sundialInfo = document.getElementById("sundial-info");
+    sundialInfo.innerHTML = `Sundial info: ${activeStation.sundialInfo}`;
     let stationWebsite = document.getElementById("station-website");
     stationWebsite.innerHTML = `Website: ${activeStation.websiteUrl}`;
     let stationTeamName = document.getElementById("station-teamName");
