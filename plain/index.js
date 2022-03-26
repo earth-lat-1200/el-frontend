@@ -31,6 +31,7 @@ function getMarkerData(stations) {
     return stations.map(station => {
         return {
             id: index++,
+            stationId: station.stationId,
             name: station.stationName,
             location: station.location,
             lat: station.latitude,
@@ -72,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let features = getFeatures(stations);
         let gData = getMarkerData(stations);
 
-        const markerSvg = `<svg viewBox="-4 0 36 36">
+        const markerSvg = `<svg viewBox="-4 0 36 36" >
             <path fill="currentColor" d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z"></path>
             <circle fill="black" cx="14" cy="14" r="7"></circle>
         </svg>`;
@@ -85,37 +86,43 @@ document.addEventListener("DOMContentLoaded", function () {
             .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
             .width(calcWidth())
             .height(window.innerHeight)
-            //.labelsData(features)
-            //.labelLat(d => d.properties.latitude)
-            //.labelLng(d => d.properties.longitude)
-            //.labelText(d => d.properties.name)
-            //.labelSize(d => Math.sqrt(d.properties.pop_max) * 4e-4)
-            //.labelDotRadius(d => Math.sqrt(d.properties.pop_max) * 4e-4)
-            //.labelColor(() => 'rgba(255, 165, 0, 0.75)')
-            //.labelResolution(2)
             .showAtmosphere(true)
             .htmlElementsData(gData)
             .htmlElement(d => {
               const el = document.createElement('div');
               el.innerHTML = markerSvg;
-              el.style.color = d.color;
+              if (d.stationId == activeStation.stationId) {
+                el.style.color = "red";
+                el.style.opacity = 0.8;
+              } else {
+                el.style.color = "white";
+                el.style.opacity = 0.5;
+              }
               el.style.width = `${d.size}px`;
+              el.id = d.stationId;
+              el.className = "stationIcon"
         
               el.style['pointer-events'] = 'auto';
               el.style.cursor = 'pointer';
-              el.onclick = () => console.info(d);
+              el.onclick = () => {
+                activeStation = stations[d.id];
+                let stationInfoLabelEl = document.getElementById("station-info-label");
+                stationInfoLabelEl.innerHTML = `${activeStation.stationName} - ${activeStation.location}`;
+                loadImage();
+                let stationIcons = document.getElementsByClassName("stationIcon");
+                console.log(stationIcons);
+                for (let stationIcon of stationIcons) {
+                    stationIcon.style.color = "white";
+                    stationIcon.style.opacity = 0.5;
+                }
+                el.style.color = "red";
+                el.style.opacity = 0.8;
+              };
               return el;
             })
             (document.getElementById('globe'))
         activeStation = getClosestStation();
         loadImage();
-        globe.onLabelClick((feature, event) => {
-            activeStation = stations[feature.properties.id];
-            let stationInfoLabelEl = document.getElementById("station-info-label");
-            stationInfoLabelEl.innerHTML = `${activeStation.stationName} - ${activeStation.location}`;
-            loadImage();
-
-        })
         globe.onZoom(v => {
             zoom = v;
         })
@@ -163,17 +170,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 })
 
-
-
 function calcNoonMeridian() {
     var nowUtc = moment().utc();
-
     let timeEquation = calcTimeEquation(nowUtc.dayOfYear());
-
     let currTimeinH = nowUtc.hour() + nowUtc.minute() / 60 + nowUtc.second() / 3600 ;
-
     let long = (-180/12) * (currTimeinH + timeEquation - 12);
-
     return long;
 }
 
@@ -194,9 +195,7 @@ function calcHeight() {
     return window.innerHeight * multiplier;
 }
 
-
 function getStationPicture() {
-
     return fetch(`https://staging-earth-lat-1200-api.azurewebsites.net/api/GetLatestTotalImageById?id=${activeStation.stationId}`, {
         method: 'GET',
         headers: {

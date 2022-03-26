@@ -123,11 +123,24 @@ h2 {
 
 }
 .blueAccent {
-    color: rgb(79, 179, 255);
+    /*color: rgb(79, 179, 255);*/
+    background-image:linear-gradient(180deg,rgb(79, 179, 255), rgb(67, 146, 207));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .yellowAccent {
-    color: #d09f0c;
+    /*color: #d09f0c;*/
+    background-image:linear-gradient(180deg,#e7b51c, #a7831a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
+.active {
+    color: rgb(79, 179, 255);
+}
+.inactive {
+    opacity: 0.5;
+}
+
 #station {
     z-index: 1;
     position: absolute;
