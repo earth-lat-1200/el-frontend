@@ -5,7 +5,7 @@ let activeStation = {};
 const DEFAULT_LANDSCAPE_ALTITUDE = 2.5;
 const DEFAULT_PORTRAIT_ALTITUDE = 3;
 const MINIMUM_ALTITUDE = 4;
-const functionsKey = 'HyJtZJmOtyCdwcWZnQwvGyHGUEoyp/0NYR3iZ56qvM2s0i2TQleTCQ==';
+const functionsKey = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 
 function getFeatures(stations) {
     let index = 0;
@@ -43,7 +43,7 @@ function getMarkerData(stations) {
 }
 
 function getStations() {
-    return fetch("https://staging-earth-lat-1200-api.azurewebsites.net/api/GetAllStations", {
+    return fetch("https://earth-lat-1200.azurewebsites.net/api/GetAllStations", {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -56,15 +56,13 @@ function getStations() {
 
 function getClosestStation(){
     const nullMeridian = calcNoonMeridian();
-    const currentLongitude = nullMeridian; 
+    const currentLongitude = nullMeridian;
     const result = stations.reduce((prev, curr) => {
-
         const distanceCurr = curr.longitude - currentLongitude;
         const distancePrev = prev.longitude - currentLongitude;
         
-        return Math.abs(distanceCurr) < Math.abs(distancePrev) && distanceCurr > currentLongitude ? curr : prev;
+        return (Math.abs(distanceCurr) < Math.abs(distancePrev) && distanceCurr <= currentLongitude) ? curr : prev;
     }, {longitude : -20000.00});
-
     return result;
 }
 
@@ -101,16 +99,12 @@ document.addEventListener("DOMContentLoaded", function () {
               el.style.width = `${d.size}px`;
               el.id = d.stationId;
               el.className = "stationIcon"
-        
               el.style['pointer-events'] = 'auto';
               el.style.cursor = 'pointer';
               el.onclick = () => {
                 activeStation = stations[d.id];
-                let stationInfoLabelEl = document.getElementById("station-info-label");
-                stationInfoLabelEl.innerHTML = `${activeStation.stationName} - ${activeStation.location}`;
-                loadImage();
+                loadImage()
                 let stationIcons = document.getElementsByClassName("stationIcon");
-                console.log(stationIcons);
                 for (let stationIcon of stationIcons) {
                     stationIcon.style.color = "white";
                     stationIcon.style.opacity = 0.5;
@@ -153,9 +147,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .arcAltitude(0)
             .arcStroke(1)
             .arcDashGap(0)
-
-            //getClosestStation();
-            console.log(lng);
             setTimeout(refresh, 5000);
         }
 
@@ -196,14 +187,17 @@ function calcHeight() {
 }
 
 function getStationPicture() {
-    return fetch(`https://staging-earth-lat-1200-api.azurewebsites.net/api/GetLatestTotalImageById?id=${activeStation.stationId}`, {
+    const stationId = activeStation.stationId;
+    return fetch(`https://earth-lat-1200.azurewebsites.net/api/GetLatestTotalImageById?id=${stationId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'x-functions-key': functionsKey
         }
     }).then(res => res.json())
-        .then(res => 'data:image/jpeg;base64,' + res.result.value.img)
+        .then(res => {
+            return 'data:image/jpeg;base64,' + res.result.value.img
+        })
 }
 
 loadImage = () => {
@@ -211,7 +205,7 @@ loadImage = () => {
     const divEl = document.getElementById('station');
     getStationPicture()
         .then(resImg => {
-            displayActiveStationData();
+            updateActiveStationData();
             imgEl.setAttribute(
                 'src', resImg
             );
@@ -276,7 +270,10 @@ onClickClose = () => {
     }
 }
 
-function displayActiveStationData() {
+updateActiveStationData = () => {
+    let stationInfoLabelEl = document.getElementById("station-info-label");
+    stationInfoLabelEl.innerHTML = `${activeStation.stationName} - ${activeStation.location}  <a><i id="info-btn" onclick="showStationData()"
+    class="icon ion-md-information-circle"></i></a>`;
     let stationLocationEl = document.getElementById("station-location");
     stationLocationEl.innerHTML = `Location: ${activeStation.location}`;
     let stationWebcamType = document.getElementById("station-webcamType");
