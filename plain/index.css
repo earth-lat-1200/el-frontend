@@ -43,6 +43,7 @@ body {
     text-decoration: none;
     cursor: pointer;
     z-index: 2;
+    text-decoration: none;
 }
 .navbar a:hover {
     color: #cfeaff;
@@ -58,6 +59,7 @@ h2 {
 }
 #landingLinks {
     float: right;
+    margin-top: 1em;
 }
 .landingHeading {
     position: absolute;
@@ -130,7 +132,7 @@ h2 {
     }
 
     .navbar a {
-        text-decoration: underline;
+        text-decoration: none;
         text-decoration-color: white;
     }
 
@@ -386,6 +388,7 @@ section {
   max-width: 80rem;
   margin: 0 auto;
   padding: 0 1.5rem;
+  text-align: left;
 
 }
 
@@ -453,7 +456,8 @@ section {
 .answer p{
   color: #fff;
   font-size: 15px;
-  padding: 2rem;
+  line-height: 1.5em;
+  padding-bottom: 1em;
 
 }
 
@@ -483,6 +487,7 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
 }
 
 p{
@@ -495,7 +500,7 @@ br{
 .header{
     font-size: calc(2vw + 1vh + 1vmin);
     margin-bottom: 1vw;
-    padding-left: 10vw;
+    padding: 1em;
 }
 
 
@@ -507,7 +512,19 @@ br{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
 }
 
+#join li{
+    font-size: larger;
+}
+
+#join ul{
+   margin-bottom: 2em;
+}
+
+a{
+    color: white;
+}
 
 
