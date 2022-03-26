@@ -9,7 +9,7 @@ body {
     color: white;
     font-family: 'MetropolisLight';
 }
-nav {
+.navbar {
     position: absolute;
     top: 0;
     left: 0;
@@ -20,17 +20,17 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
-nav img {
+.navbar img {
     width: 2.4em;
 }
-nav h1 {
+.navbar h1 {
     margin: 0;
     top: -0.4em;
     font-size: 1.5em;
     left: 0;
     margin-left: 0.3em;
 }
-nav button {
+.navbar a {
     padding-top: -0.8em;
     padding-right: 2em;
     color: white;
@@ -40,8 +40,10 @@ nav button {
     border-radius: 0;
     box-shadow: none;
     font-size: 1.2em;
+    text-decoration: none;
+    cursor: pointer;
 }
-nav button:hover {
+.navbar a:hover {
     color: #cfeaff;
 }
 h1 {
@@ -55,7 +57,6 @@ h2 {
 }
 #landingLinks {
     float: right;
-    margin-right: 8%;
 }
 .landingHeading {
     position: absolute;
@@ -65,7 +66,6 @@ h2 {
 .landingLinks {
     display: block;
     float: right;
-    margin-right: 8%;
 }
 .heading {
     font-size: calc(2vw + 1vh + 1vmin);
@@ -78,7 +78,6 @@ h2 {
 }
 .hamburger {
     display: none;
-    padding-right: 8%;
 }
 .bar {
     display: block;
@@ -104,11 +103,49 @@ h2 {
 }
 @media only screen and (max-width: 780px) {
     .hamburger {
+        z-index: 2;
         display: block;
         cursor: pointer;
+        position: fixed;
+        right: 2em;
     }
     .landingLinks {
         display: none;
+    }
+
+    .open.landingLinks {
+        
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        right: 0;
+        top: 80px;
+        align-items: flex-end;
+        
+    }
+
+    .open.landingLinks a:not(:last-child) {
+        padding-bottom: 1em;
+    }
+
+    .navbar a {
+        text-decoration: underline;
+        text-decoration-color: white;
+    }
+
+}
+
+@media only screen and (max-width: 850px) {
+    #station{
+    /* z-index: 1; */
+    position: absolute;
+    /* left: 10vw; */
+    /* top: 50%; */
+    /* max-width: 40%; */
+    max-height: 40%;
+    display: block;
+    bottom: 5px;
+
     }
 
 }
@@ -148,7 +185,8 @@ h2 {
     top: 50%;
     max-width: 40%;
     max-height: 40%;
-    display: none;
+    display: block;
+    bottom: 5px;
 }
 
 #time-lapse {
@@ -232,11 +270,12 @@ h2 {
 #info-btn {
     flex: 1;
     text-align: left;
-    color: white;
+    color: #eeb353;
     cursor: pointer;
+    font-size: large;
 }
 
-#stationLableWrapper p {
+#station-label-wrapper p {
     margin: 0;
     padding: 20px 0 5px 0;
     font-size: 20px;
@@ -266,3 +305,214 @@ h2 {
 .image-overlay-off {
     display: none;
 }
+
+.hamburger div {
+    width: 35px;
+    height: 3px;
+    margin: 6px 0;
+    transition: 0.4s;
+}
+.open .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-6px, 6px);
+    transform: rotate(-45deg) translate(-6px, 6px);
+}
+.open .bar2 {
+    opacity: 0;
+}
+.open .bar3 {
+    -webkit-transform: rotate(45deg) translate(-5px, -6px);
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+.open .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+}
+.mobile-menu {
+    display: none;
+    position: absolute;
+    top: 80px;
+    right: 0;
+    
+    
+}
+.mobile-menu li {
+    margin-bottom: 10px;
+    align-self: flex-end;
+    padding-right: 20px;
+}
+ul {
+    list-style: none;
+    height: 100%;
+  }
+  
+  ul a {
+    color: white;
+  }
+  
+  ul li {
+    padding: 5px;
+    margin-left: 20px;
+  }
+  
+  ul li:hover {
+    transform: scale(1.1);
+    transition: 0.3s;
+  }
+
+  /* about sections */
+*,
+*::before,
+*::after{
+  margin:0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  font-family: 'DM Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+/*Section used for centering process*/
+section {
+  height: 100vh;
+}
+
+.accordion{
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+
+}
+
+.accordion-item{
+  background-color: #000000;
+  border-radius: .4rem;
+}
+
+.accordion-item hr{
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.accordion-link{
+  font-size: 1.6rem;
+  color: white;
+  text-decoration: none;
+  background-color: #000000;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.accordion-link h3{
+  font-weight:500;
+  font-size: 20px;
+}
+
+.accordion-link i{
+  color: #e7d5ff;
+  padding: .5rem;
+
+}
+
+.accordion-link ul{
+  display:flex;
+  align-items: flex-end;
+  list-style-type: none;
+  margin-left: 25px;
+}
+
+.accordion-link li{
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 0 0 1px 5px;
+}
+
+.accordion-link div{
+  display: flex;
+}
+
+.accordion-link .ion-md-arrow-down{
+  display: none;
+}
+
+.answer{
+  max-height: 0;
+  overflow: auto;
+  position: relative;
+  background-color: #000;
+  transition: max-height 850ms;
+}
+
+.answer p{
+  color: #fff;
+  font-size: 15px;
+  padding: 2rem;
+
+}
+
+.accordion-item:target .answer{
+  max-height: 70rem;
+}
+
+.accordion-item:target .accordion-link .ion-md-arrow-forward{
+  display: none
+}
+
+.accordion-item:target .accordion-link .ion-md-arrow-down{
+  display: block;
+}
+
+.icon{
+    color: white;
+}
+
+#about {
+    position: relative;
+    margin-top: 100px;
+    align-content: center;
+    padding-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+p{
+    padding: 0.5px;
+}
+br{
+    padding: 50px;
+} 
+
+.header{
+    font-size: calc(2vw + 1vh + 1vmin);
+    margin-bottom: 1vw;
+    padding-left: 10vw;
+}
+
+
+#join {
+    position: relative;
+    margin-top: 100px;
+    align-content: center;
+    padding-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ion-md-arrow-forward:before {
+    content: "";
+    color: white;
+}
+
+.ion-md-arrow-down:before {
+    content: "";
+    color: white;
+}
+

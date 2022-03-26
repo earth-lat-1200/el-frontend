@@ -248,12 +248,17 @@ function setGlobePOV(currentAltitude) {
     }
 }
 
+onMobile = () => {
+    return window.innerWidth < 837;
+}
+
 resizeStationInfoPortrait = () => {
     const stationEl = document.getElementById('station');
     const stationWidth = stationEl.offsetWidth;
-    stationEl.style.left = `${(window.innerWidth - stationWidth) / 2}px`;
+    stationEl.style.left = onMobile() ? 'auto' : `${(window.innerWidth - stationWidth) / 2}px`;
     stationEl.style.top = 'auto';
-    stationEl.style.bottom = '5px';
+    stationEl.style.bottom = onMobile() ? '20px' : '5px';
+    stationEl.style.maxWidth = onMobile() ? 'initial' : '40%';
 }
 
 resizeStationInfoLandscape = () => {
@@ -297,3 +302,8 @@ showStationData = () => {
 window.addEventListener('resize', (event) => {
     setGlobePOV();
 });
+
+function toggleMobileMenu(menu) {
+    menu.classList.toggle('open');
+    document.getElementById("landingLinks").classList.toggle('open');
+}
