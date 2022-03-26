@@ -392,8 +392,8 @@ section {
 }
 
 .accordion-item{
-  background-color: #000000;
-  border-radius: .4rem;
+  border-bottom-style: solid;
+  border-width: 0.01px;
 }
 
 .accordion-item hr{
@@ -404,7 +404,6 @@ section {
   font-size: 1.6rem;
   color: white;
   text-decoration: none;
-  background-color: #000000;
   width: 100%;
   display: flex;
   align-items: center;
