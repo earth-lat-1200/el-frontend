@@ -212,7 +212,6 @@ loadImage = () => {
             );
             divEl.style.display = 'block';
             imgEl.style.objectFit = 'contain';
-            console.log("current pic \n" + resImg)
             // UGLY solution, couldn't find an alternative yet
             setTimeout(function () {
                 setGlobePOV(true);
