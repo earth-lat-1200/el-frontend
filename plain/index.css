@@ -42,6 +42,7 @@ body {
     font-size: 1.2em;
     text-decoration: none;
     cursor: pointer;
+    z-index: 2;
 }
 .navbar a:hover {
     color: #cfeaff;
@@ -400,7 +401,7 @@ section {
 }
 
 .accordion-link i{
-  color: #e7d5ff;
+  color: white;
   padding: .5rem;
 
 }
@@ -446,11 +447,13 @@ section {
 }
 
 .accordion-item:target .accordion-link .ion-md-arrow-forward{
-  display: none
+  display: none;
+  color: white;
 }
 
 .accordion-item:target .accordion-link .ion-md-arrow-down{
   display: block;
+  color: white;
 }
 
 .icon{
@@ -491,13 +494,5 @@ br{
     justify-content: center;
 }
 
-.ion-md-arrow-forward:before {
-    content: "";
-    color: white;
-}
 
-.ion-md-arrow-down:before {
-    content: "";
-    color: white;
-}
 
