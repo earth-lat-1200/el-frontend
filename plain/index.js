@@ -61,7 +61,7 @@ function getClosestStation(){
         const distanceCurr = curr.longitude - currentLongitude;
         const distancePrev = prev.longitude - currentLongitude;
         
-        return (Math.abs(distanceCurr) < Math.abs(distancePrev) && distanceCurr <= currentLongitude) ? curr : prev;
+        return Math.abs(distanceCurr) < Math.abs(distancePrev) ? curr : prev;
     }, {longitude : -20000.00});
     return result;
 }
