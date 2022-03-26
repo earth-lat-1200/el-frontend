@@ -58,7 +58,6 @@ function getClosestStation(){
     const nullMeridian = calcNoonMeridian();
     const currentLongitude = nullMeridian;
     const result = stations.reduce((prev, curr) => {
-        debugger
         const distanceCurr = curr.longitude - currentLongitude;
         const distancePrev = prev.longitude - currentLongitude;
         
