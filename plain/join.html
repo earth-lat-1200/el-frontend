@@ -6,6 +6,7 @@
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <base href="./">
+    <script type="text/javascript" src="index.js"></script>
     <script src="//unpkg.com/globe.gl"></script>
     <script src="https://momentjs.com/downloads/moment.js"></script>
     <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
@@ -25,32 +26,16 @@
                 <h1>EarthLAT <span class="blueAccent">1200</span></h1>
             </div>
 
-            <div class="landingLinks">
-                <a href="#">
-                    <button>Explore</button>
-                </a>
-                <a href="about.html#about">
-                    <button>About</button>
-                </a>
-                <a href="join.html#join">
-                    <button>Join</button>
-                </a>
-                <a href="mailto:contact@earthlat1200.org">
-                    <button>Contact</button>
-                </a>
+            <div class="landingLinks" id="landingLinks">
+                <a href="#">Explore</a>
+                <a href="about.html">About</a>
+                <a href="mailto:contact@earthlat1200.org">Contact</a>
+                <a href="join.html">Join</a>
             </div>
             <div class="hamburger" onclick="toggleMobileMenu(this)">
                 <span class="bar bar1"></span>
                 <span class="bar bar2"></span>
                 <span class="bar bar3"></span>
-                <ul class="mobile-menu">
-                    <li><a href"#">Explore</a></li>
-                    <li><a href"#">About</a></li>
-                    <li><a href="mailto:contact@earthlat1200.org">
-                        Contact
-                    </a></li>
-                    <li><a href"#">Join</a></li>
-                </ul>
             </div>
         </nav>
     </div>

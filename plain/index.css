@@ -9,7 +9,7 @@ body {
     color: white;
     font-family: 'MetropolisLight';
 }
-nav {
+.navbar {
     position: absolute;
     top: 0;
     left: 0;
@@ -20,17 +20,17 @@ nav {
     justify-content: space-between;
     align-items: center;
 }
-nav img {
+.navbar img {
     width: 2.4em;
 }
-nav h1 {
+.navbar h1 {
     margin: 0;
     top: -0.4em;
     font-size: 1.5em;
     left: 0;
     margin-left: 0.3em;
 }
-nav button {
+.navbar a {
     padding-top: -0.8em;
     padding-right: 2em;
     color: white;
@@ -40,8 +40,10 @@ nav button {
     border-radius: 0;
     box-shadow: none;
     font-size: 1.2em;
+    text-decoration: none;
+    cursor: pointer;
 }
-nav button:hover {
+.navbar a:hover {
     color: #cfeaff;
 }
 h1 {
@@ -55,7 +57,6 @@ h2 {
 }
 #landingLinks {
     float: right;
-    margin-right: 8%;
 }
 .landingHeading {
     position: absolute;
@@ -65,7 +66,6 @@ h2 {
 .landingLinks {
     display: block;
     float: right;
-    margin-right: 8%;
 }
 .heading {
     font-size: calc(2vw + 1vh + 1vmin);
@@ -78,7 +78,6 @@ h2 {
 }
 .hamburger {
     display: none;
-    padding-right: 8%;
 }
 .bar {
     display: block;
@@ -104,11 +103,49 @@ h2 {
 }
 @media only screen and (max-width: 780px) {
     .hamburger {
+        z-index: 2;
         display: block;
         cursor: pointer;
+        position: fixed;
+        right: 2em;
     }
     .landingLinks {
         display: none;
+    }
+
+    .open.landingLinks {
+        
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        right: 0;
+        top: 80px;
+        align-items: flex-end;
+        
+    }
+
+    .open.landingLinks a:not(:last-child) {
+        padding-bottom: 1em;
+    }
+
+    .navbar a {
+        text-decoration: underline;
+        text-decoration-color: white;
+    }
+
+}
+
+@media only screen and (max-width: 850px) {
+    #station{
+    /* z-index: 1; */
+    position: absolute;
+    /* left: 10vw; */
+    /* top: 50%; */
+    /* max-width: 40%; */
+    max-height: 40%;
+    display: block;
+    bottom: 5px;
+
     }
 
 }
@@ -132,7 +169,8 @@ h2 {
     top: 50%;
     max-width: 40%;
     max-height: 40%;
-    display: none;
+    display: block;
+    bottom: 5px;
 }
 
 #time-lapse {
@@ -217,11 +255,12 @@ h2 {
 #info-btn {
     flex: 1;
     text-align: left;
-    color: white;
+    color: #eeb353;
     cursor: pointer;
+    font-size: large;
 }
 
-#stationLableWrapper p {
+#station-label-wrapper p {
     margin: 0;
     padding: 20px 0 5px 0;
     font-size: 20px;
@@ -266,13 +305,12 @@ h2 {
     opacity: 0;
 }
 .open .bar3 {
-    -webkit-transform: rotate(45deg) translate(-7px, -6px);
-    transform: rotate(45deg) translate(-7px, -6px);
+    -webkit-transform: rotate(45deg) translate(-5px, -6px);
+    transform: rotate(45deg) translate(-5px, -6px);
 }
 .open .mobile-menu {
     display: flex;
     flex-direction: column;
-    align-items: left;
     justify-content: flex-start;
 
 }
@@ -286,14 +324,12 @@ h2 {
 }
 .mobile-menu li {
     margin-bottom: 10px;
-    align-items: right;
+    align-self: flex-end;
+    padding-right: 20px;
 }
 ul {
     list-style: none;
     height: 100%;
-    display: flex;
-    align-items: left;
-    justify-content: space-around;
   }
   
   ul a {
@@ -321,7 +357,6 @@ ul {
 
 html {
   font-family: 'DM Sans', sans-serif;
-  font-size: 10px;
   box-sizing: border-box;
 }
 
