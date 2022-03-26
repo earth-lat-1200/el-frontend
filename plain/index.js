@@ -188,7 +188,7 @@ function calcHeight() {
 }
 
 function getStationPicture() {
-    const stationId = "RO001";
+    const stationId = activeStation.stationId;
     return fetch(`https://earth-lat-1200.azurewebsites.net/api/GetLatestTotalImageById?id=${stationId}`, {
         method: 'GET',
         headers: {
