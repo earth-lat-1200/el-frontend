@@ -4,6 +4,7 @@
 }
 
 body {
+    overflow: hidden;
     margin: 0;
     overflow-x: hidden;
     color: white;
@@ -135,7 +136,6 @@ h2 {
 @media only screen and (max-width: 821px) {
 
     #station-container {
-        padding-bottom: 10px;
         top: initial !important;
         left: 0 !important;
         bottom: 0 !important;
@@ -366,7 +366,7 @@ h2 {
 
 #station-label-wrapper p {
     margin: 0;
-    padding: 20px 0 5px 0;
+    padding: 10px 0 15px 0;
     font-size: 20px;
 }
 
@@ -631,3 +631,22 @@ a {
     font-size: larger;
 }
 
+::-webkit-scrollbar {
+    top: 100px;
+    width: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255,255,255,0.3);
+}
