@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", function () {
         let features = getFeatures(stations);
         let gData = getMarkerData(stations);
 
-        const markerSvg = `<svg viewBox="-4 0 36 36" >
-            <path fill="currentColor" d="M14,0 C21.732,0 28,5.641 28,12.6 C28,23.963 14,36 14,36 C14,36 0,24.064 0,12.6 C0,5.641 6.268,0 14,0 Z"></path>
-            <circle fill="black" cx="14" cy="14" r="7"></circle>
-        </svg>`;
+        const markerSvg = `<svg viewBox="-4 0 36 36" width="36" height="36">
+        <path fill="currentColor" d="M 14.284 0.12 C 18.086 0.12 21.169 2.969 21.169 6.484 C 21.169 12.224 14.284 18.304 14.284 18.304 C 14.284 18.304 7.399 12.275 7.399 6.484 C 7.399 2.969 10.481 0.12 14.284 0.12 Z" style=""></path>
+        <circle fill="black" cx="12.397" cy="9.693" r="7" style="" transform="matrix(0.604555, 0, 0, 0.579183, 6.790349, 1.322492)"></circle>
+      </svg>`;
 
         let onInit = true;
         let lng = 0;
