@@ -225,12 +225,12 @@ function setGlobePOV(currentAltitude) {
     var lng = 25;
     globe.height(window.innerHeight);
     let altitude;
-    if (window.innerWidth > window.innerHeight) // landscape
+    if (window.innerWidth > 800) // landscape
     {
         globe.height(window.innerHeight);
         globe.width(calcWidth());
         altitude = DEFAULT_LANDSCAPE_ALTITUDE;
-    } else if (onMobile()) { // portrait
+    } else { // portrait
         globe.height(calcHeight());
         globe.width(window.innerWidth);
         altitude = DEFAULT_PORTRAIT_ALTITUDE;
