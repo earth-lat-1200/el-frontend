@@ -5,7 +5,6 @@
 body {
     margin: 0;
     overflow-x: hidden;
-    background-color: black;
     color: white;
     font-family: 'MetropolisLight';
 }
@@ -19,6 +18,19 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 100;
+}
+.container {
+    transition: 0.5s;
+}
+.container > * {
+    filter: drop-shadow(1px 1px 2px black);
+}
+.navbar > * {
+    filter: drop-shadow(1px 1px 2px black);
+}
+.blur { 
+    opacity: 0.5;
 }
 .navbar img {
     width: 2.4em;
@@ -32,7 +44,6 @@ body {
 }
 .navbar a {
     padding-top: -0.8em;
-    padding-right: 2em;
     color: white;
     font-family: 'MetropolisSemiBold';
     background-color: transparent;
@@ -68,7 +79,12 @@ h2 {
 .landingLinks {
     display: block;
     float: right;
+    transition: 0.5s;
 }
+.landingLinks a:not(:last-child) {
+    padding-right: 2em;
+}
+
 .heading {
     font-size: calc(2vw + 1vh + 1vmin);
     margin-bottom: 1vw;
@@ -86,7 +102,6 @@ h2 {
     width: 25px;
     height: 3px;
     margin: 5px auto;
-    -webkit-transition: all 0.3s ease-in-out;
     transition: all 0.3s ease-in-out;
     background-color: white;
 }
@@ -108,18 +123,22 @@ h2 {
         z-index: 2;
         display: block;
         cursor: pointer;
-        position: fixed;
-        right: 2em;
+        position: absolute;
+        right: 0;    
+        top: 2.5em;
     }
     .landingLinks {
         display: none;
+        margin-top: 1em;
+    }
+    .landingLinks a:not(:last-child) {
+        padding-right: 0;
     }
 
     .open.landingLinks {
-        
         display: flex;
         flex-direction: column;
-        position: fixed;
+        position: absolute;
         right: 0;
         top: 90px;
         align-items: flex-end;
@@ -133,6 +152,7 @@ h2 {
     .navbar a {
         text-decoration: none;
         text-decoration-color: white;
+        padding-right: 0.15em;
     }
 
 }
@@ -163,13 +183,13 @@ h2 {
 }
 .blueAccent {
     /*color: rgb(79, 179, 255);*/
-    background-image:linear-gradient(180deg,rgb(79, 179, 255), rgb(67, 146, 207));
+    background-image: linear-gradient(180deg,rgb(79, 179, 255), rgb(67, 146, 207));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 .yellowAccent {
     /*color: #d09f0c;*/
-    background-image:linear-gradient(180deg,#e7b51c, #a7831a);
+    background-image: linear-gradient(180deg,#e7b51c, #a7831a);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -338,33 +358,31 @@ h2 {
     display: none;
     position: absolute;
     top: 80px;
-    right: 0;
-    
-    
+    right: 0; 
 }
 .mobile-menu li {
     margin-bottom: 10px;
     align-self: flex-end;
-    padding-right: 20px;
 }
-ul {
+
+.navbar ul {
     list-style: none;
     height: 100%;
-  }
+}
   
-  ul a {
+.navbar ul a {
     color: white;
-  }
-  
-  ul li {
+}
+
+.navbar ul li {
     padding: 5px;
     margin-left: 20px;
-  }
-  
-  ul li:hover {
+}
+
+.navbar ul li:hover {
     transform: scale(1.1);
     transition: 0.3s;
-  }
+}
 
   /* about sections */
 *,
@@ -376,6 +394,8 @@ ul {
 }
 
 html {
+  background-color: black;
+  background-image: url("https://unpkg.com/three-globe@2.24.4/example/img/night-sky.png");
   font-family: 'DM Sans', sans-serif;
   box-sizing: border-box;
 }
@@ -389,7 +409,7 @@ section {
   width: 100%;
   max-width: 80rem;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 8vw;
   text-align: left;
 
 }
@@ -417,6 +437,7 @@ section {
 .accordion-link h3{
   font-weight:500;
   font-size: 20px;
+  line-height: 1.4;
 }
 
 .accordion-link i{
@@ -428,7 +449,8 @@ section {
 .accordion-link ul{
   display:flex;
   align-items: flex-end;
-  list-style-type: none;
+  /* list-style-type: none; */
+  list-style-type: circle;
   margin-left: 25px;
 }
 
@@ -450,7 +472,6 @@ section {
   max-height: 0;
   overflow: auto;
   position: relative;
-  background-color: #000;
   transition: max-height 850ms;
 }
 
@@ -499,11 +520,10 @@ br{
 } 
 
 .header{
-    font-size: calc(2vw + 1vh + 1vmin);
+    /* font-size: calc(2vw + 1vh + 1vmin); */
     margin-bottom: 1vw;
     padding: 1em;
 }
-
 
 #join {
     position: relative;
@@ -517,15 +537,22 @@ br{
 }
 
 #join li{
-    font-size: larger;
+    padding-bottom: 10px;
 }
 
 #join ul{
    margin-bottom: 2em;
 }
 
+li:before {
+    /* content: "+ "; */
+}
+
 a{
     color: white;
 }
 
+.larger-font {
+    font-size: larger;
+}
 
