@@ -240,16 +240,14 @@ h2 {
     position: absolute;
     right: 0;
     top: 0;
-    padding: 5px 7px 0 0;
+    padding: 1em;
     font-size: 20px;
-    transition: 0.5s;
+    opacity: 0.8;
 }
 
 #close-station:hover {
-    top: 0px;
-    font-size: 30px;
+    opacity: 1;
     cursor: pointer;
-    transition: 0.5s;
 }
 
 #station-image-overlay {
@@ -272,9 +270,14 @@ h2 {
 #info-btn {
     flex: 1;
     text-align: left;
-    color: #eeb353;
     cursor: pointer;
     font-size: large;
+    opacity: 0.8;
+    padding-left: 2px;
+}
+
+#info-btn:hover {
+    opacity: 1;
 }
 
 #station-label-wrapper p {
@@ -288,7 +291,7 @@ h2 {
     color: white;
     display: block;
     margin: auto;
-    padding: 5px;
+    padding: 1em;
 }
 #station-data p {
     margin: 5px 0 3px 0;
