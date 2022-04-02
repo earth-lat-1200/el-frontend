@@ -134,23 +134,32 @@ h2 {
         text-decoration: none;
         text-decoration-color: white;
     }
-
 }
 
-@media only screen and (max-width: 850px) {
-    #station{
-    /* z-index: 1; */
-    position: absolute;
-    /* left: 10vw; */
-    /* top: 50%; */
-    /* max-width: 40%; */
-    max-height: 40%;
-    display: block;
-    bottom: 5px;
+@media only screen and (max-width: 730px) {
 
+    #station {
+        z-index: 1;
+        position: absolute;
+        top: initial!important;
+        left: 5vw !important;
+        bottom: 5vw!important;
+        max-width: 90% !important;
+        max-height: 40%;
+        display: block;
     }
-
 }
+
+/*@media only screen and (max-width: 850px) {*/
+/*    #station{*/
+/*    position: absolute;*/
+/*    max-height: 40%;*/
+/*    display: block;*/
+/*    bottom: 5px;*/
+
+/*    }*/
+
+/*}*/
 @media only screen and (max-width: 500px) {
     #station-info-label {
         font-size: 15px!important;
@@ -185,10 +194,10 @@ h2 {
     position: absolute;
     left: 10vw;
     top: 50%;
+    bottom: auto;
     max-width: 40%;
     max-height: 40%;
     display: block;
-    bottom: 5px;
 }
 
 #time-lapse {

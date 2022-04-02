@@ -3,7 +3,7 @@ let globe;
 let stations = [];
 let activeStation = {};
 const DEFAULT_LANDSCAPE_ALTITUDE = 2.5;
-const DEFAULT_PORTRAIT_ALTITUDE = 3;
+const DEFAULT_PORTRAIT_ALTITUDE = 3.2;
 const MINIMUM_ALTITUDE = 4;
 const functionsKey = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 
@@ -181,7 +181,7 @@ function calcWidth() {
 function calcHeight() {
     const stationEl = document.getElementById('station');
     let screenOccupy = stationEl.offsetHeight / window.innerHeight;
-    let multiplier = screenOccupy === 0 ? 1 : 1 - screenOccupy;
+    let multiplier = screenOccupy === 0 ? 1 : (1 - screenOccupy) * 1.1;
 
     return window.innerHeight * multiplier;
 }
@@ -227,15 +227,14 @@ function setGlobePOV(currentAltitude) {
     let altitude;
     if (window.innerWidth > window.innerHeight) // landscape
     {
-        resizeStationInfoLandscape();
         globe.height(window.innerHeight);
         globe.width(calcWidth());
         altitude = DEFAULT_LANDSCAPE_ALTITUDE;
-    } else { // portrait
-        resizeStationInfoPortrait();
+    } else if (onMobile()) { // portrait
         globe.height(calcHeight());
         globe.width(window.innerWidth);
-        altitude = window.innerWidth < 550 ? MINIMUM_ALTITUDE : DEFAULT_PORTRAIT_ALTITUDE;
+        altitude = DEFAULT_PORTRAIT_ALTITUDE;
+        // altitude = window.innerWidth < 550 ? MINIMUM_ALTITUDE : DEFAULT_PORTRAIT_ALTITUDE;
     }
     if(!currentAltitude){
         globe.pointOfView({lat, lng, altitude});
@@ -243,23 +242,7 @@ function setGlobePOV(currentAltitude) {
 }
 
 onMobile = () => {
-    return window.innerWidth < 837;
-}
-
-resizeStationInfoPortrait = () => {
-    const stationEl = document.getElementById('station');
-    const stationWidth = stationEl.offsetWidth;
-    stationEl.style.left = onMobile() ? 'auto' : `${(window.innerWidth - stationWidth) / 2}px`;
-    stationEl.style.top = 'auto';
-    stationEl.style.bottom = onMobile() ? '20px' : '5px';
-    stationEl.style.maxWidth = onMobile() ? 'initial' : '40%';
-}
-
-resizeStationInfoLandscape = () => {
-    const stationEl = document.getElementById('station');
-    stationEl.style.left = `10vw`;
-    stationEl.style.top = '50%';
-    stationEl.style.bottom = 'auto';
+    return window.innerWidth < 780;
 }
 
 onClickClose = () => {
@@ -297,7 +280,7 @@ showStationData = () => {
 }
 
 window.addEventListener('resize', (event) => {
-    setGlobePOV();
+    setGlobePOV(true);
 });
 
 function toggleMobileMenu(menu) {
