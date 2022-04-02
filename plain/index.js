@@ -3,7 +3,7 @@ let globe;
 let stations = [];
 let activeStation = {};
 const DEFAULT_LANDSCAPE_ALTITUDE = 2.5;
-const DEFAULT_PORTRAIT_ALTITUDE = 3;
+const DEFAULT_PORTRAIT_ALTITUDE = 3.2;
 const MINIMUM_ALTITUDE = 4;
 const functionsKey = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 
@@ -225,17 +225,16 @@ function setGlobePOV(currentAltitude) {
     var lng = 25;
     globe.height(window.innerHeight);
     let altitude;
-    if (window.innerWidth > window.innerHeight) // landscape
+    if (window.innerWidth > 821) // landscape
     {
-        resizeStationInfoLandscape();
         globe.height(window.innerHeight);
         globe.width(calcWidth());
         altitude = DEFAULT_LANDSCAPE_ALTITUDE;
     } else { // portrait
-        resizeStationInfoPortrait();
         globe.height(calcHeight());
         globe.width(window.innerWidth);
-        altitude = window.innerWidth < 550 ? MINIMUM_ALTITUDE : DEFAULT_PORTRAIT_ALTITUDE;
+        altitude = DEFAULT_PORTRAIT_ALTITUDE;
+        // altitude = window.innerWidth < 550 ? MINIMUM_ALTITUDE : DEFAULT_PORTRAIT_ALTITUDE;
     }
     if(!currentAltitude){
         globe.pointOfView({lat, lng, altitude});
@@ -243,26 +242,7 @@ function setGlobePOV(currentAltitude) {
 }
 
 onMobile = () => {
-    return window.innerWidth < 837;
-}
-
-resizeStationInfoPortrait = () => {
-    const stationEl = document.getElementById('station');
-    const stationWidth = stationEl.offsetWidth;
-    stationEl.style.left = onMobile() ? 'auto' : `${(window.innerWidth - stationWidth) / 2}px`;
-    stationEl.style.top = 'auto';
-    stationEl.style.bottom = onMobile() ? '20px' : '5px';
-    stationEl.style.maxWidth = onMobile() ? 'initial' : '40%';
-    stationEl.style.width = onMobile() ? '95%' : 'initial';
-    stationEl.style.marginLeft = onMobile() ? '5%' : 'initial';
-}
-
-resizeStationInfoLandscape = () => {
-    const stationEl = document.getElementById('station');
-    stationEl.style.left = `10vw`;
-    stationEl.style.top = '50%';
-    stationEl.style.bottom = 'auto';
-    stationEl.style.maxWidth = 'auto';
+    return window.innerWidth < 780;
 }
 
 onClickClose = () => {
