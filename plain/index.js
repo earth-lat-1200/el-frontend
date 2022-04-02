@@ -225,7 +225,7 @@ function setGlobePOV(currentAltitude) {
     var lng = 25;
     globe.height(window.innerHeight);
     let altitude;
-    if (window.innerWidth > 800) // landscape
+    if (window.innerWidth > 821) // landscape
     {
         globe.height(window.innerHeight);
         globe.width(calcWidth());

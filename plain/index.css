@@ -128,7 +128,7 @@ h2 {
 @media (orientation: landscape) {
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 821px) {
 
     #station-container {
         padding-bottom: 10px;
@@ -164,14 +164,14 @@ h2 {
 
     #station {
         margin: auto;
-        max-width: 90%;
+        max-width: 90%!important;
         left: unset !important;
         bottom: unset !important;
         top: unset !important;
     }
 }
 
-@media only screen and (max-width: 780px) {
+@media only screen and (max-width: 821px) {
 
     #station {
         margin: auto;
