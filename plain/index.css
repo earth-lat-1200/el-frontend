@@ -136,6 +136,7 @@ h2 {
 @media only screen and (max-width: 821px) {
 
     #station-container {
+        padding-bottom: 10px;
         top: initial !important;
         left: 0 !important;
         bottom: 0 !important;
