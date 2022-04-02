@@ -479,7 +479,7 @@ section {
     height: 100vh;
 }
 
-.accordion {
+/* .accordion {
     width: 100%;
     max-width: 80rem;
     margin: 0 auto;
@@ -523,7 +523,6 @@ section {
 .accordion-link ul {
     display: flex;
     align-items: flex-end;
-    /* list-style-type: none; */
     list-style-type: circle;
     margin-left: 25px;
 }
@@ -569,7 +568,75 @@ section {
 .accordion-item:target .accordion-link .ion-md-arrow-down {
     display: block;
     color: white;
+} */
+
+.accordion-container {
+    max-width: 800px;
+    margin: auto;
 }
+
+button h3 {
+    display: inline;
+    font-family: 'MetropolisLight';    
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 1.4;
+    padding: 0;
+}
+
+.accordion {
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+    width: 100%;
+    border-bottom-style: solid;
+    border-width: 0.01px;
+  }
+  
+  .accordion:hover {
+    background-color: rgba(255,255,255,0.2);
+  }
+  
+  .accordion:after {
+    content: '\002B';
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+    font-size: 20px;
+    padding-top: 2px;
+  }
+  
+  .active:after {
+    font-size: 20px;
+    content: "\2212";
+  }
+  
+  .panel {
+    text-align: left;
+    padding-left: 25px;
+    padding-right: 25px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+  }
+
+  .panel p {      
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.5em;
+    padding-top: 1em;
+  }
+
+  .panel p:last-child {
+    padding-bottom: 1em;
+  } 
 
 .icon {
     color: white;
@@ -613,10 +680,6 @@ br {
 
 #join li {
     padding-bottom: 10px;
-}
-
-#join ul {
-    margin-bottom: 2em;
 }
 
 li:before {
