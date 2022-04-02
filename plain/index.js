@@ -181,7 +181,7 @@ function calcWidth() {
 function calcHeight() {
     const stationEl = document.getElementById('station');
     let screenOccupy = stationEl.offsetHeight / window.innerHeight;
-    let multiplier = screenOccupy === 0 ? 1 : 1 - screenOccupy;
+    let multiplier = screenOccupy === 0 ? 1 : (1 - screenOccupy) * 1.1;
 
     return window.innerHeight * multiplier;
 }
@@ -253,6 +253,8 @@ resizeStationInfoPortrait = () => {
     stationEl.style.top = 'auto';
     stationEl.style.bottom = onMobile() ? '20px' : '5px';
     stationEl.style.maxWidth = onMobile() ? 'initial' : '40%';
+    stationEl.style.width = onMobile() ? '95%' : 'initial';
+    stationEl.style.marginLeft = onMobile() ? '5%' : 'initial';
 }
 
 resizeStationInfoLandscape = () => {
@@ -260,6 +262,7 @@ resizeStationInfoLandscape = () => {
     stationEl.style.left = `10vw`;
     stationEl.style.top = '50%';
     stationEl.style.bottom = 'auto';
+    stationEl.style.maxWidth = 'auto';
 }
 
 onClickClose = () => {
@@ -299,10 +302,11 @@ showStationData = () => {
 }
 
 window.addEventListener('resize', (event) => {
-    setGlobePOV();
+    setGlobePOV(true);
 });
 
 function toggleMobileMenu(menu) {
     menu.classList.toggle('open');
+    document.getElementsByClassName("container")[0].classList.toggle('blur');
     document.getElementById("landingLinks").classList.toggle('open');
 }
