@@ -2,12 +2,6 @@ const DEFAULT_LANDSCAPE_ALTITUDE = 2.5;
 const DEFAULT_PORTRAIT_ALTITUDE = 3.2;
 const LANDSCAPE_WIDTH_SIZE = 821;
 const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
-const MARKER_SVG = `
-        <svg viewBox="-4 0 36 36" width="36" height="36">
-            <path fill="currentColor" d="M 14.284 0.12 C 18.086 0.12 21.169 2.969 21.169 6.484 C 21.169 12.224 14.284 18.304 14.284 18.304 C 14.284 18.304 7.399 12.275 7.399 6.484 C 7.399 2.969 10.481 0.12 14.284 0.12 Z" style=""></path>
-            <circle fill="black" cx="12.397" cy="9.693" r="7" style="" transform="matrix(0.604555, 0, 0, 0.579183, 6.790349, 1.322492)"></circle>
-        </svg>
-        `;
 
 let shownImage;
 let globe;
@@ -58,13 +52,12 @@ document.addEventListener("DOMContentLoaded", function () {
             .showAtmosphere(true)
             .htmlElementsData(gData)
             .htmlElement(d => {
-                const el = document.createElement('div');
-                el.innerHTML = MARKER_SVG;
+                const el = document.createElement('img');
                 if (d.stationId === activeStation.stationId) {
-                    el.style.color = "red";
+                    el.src = './resources/marker_red.svg';
                     el.style.opacity = 0.8;
                 } else {
-                    el.style.color = "white";
+                    el.src = './resources/marker_white.svg';
                     el.style.opacity = 0.5;
                 }
                 el.style.width = `${d.size}px`;
@@ -75,12 +68,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 el.onclick = () => {
                     activeStation = stations[d.id];
                     loadImage();
-                    let stationIcons = document.getElementsByClassName("stationIcon");
+                    const stationIcons = document.getElementsByClassName("stationIcon");
                     for (let stationIcon of stationIcons) {
-                        stationIcon.style.color = "white";
+                        stationIcon.src = './resources/marker_white.svg';
                         stationIcon.style.opacity = 0.5;
                     }
-                    el.style.color = "red";
+                    el.src = './resources/marker_red.svg';
                     el.style.opacity = 0.8;
                 };
                 return el;
