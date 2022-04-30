@@ -469,7 +469,6 @@ h2 {
 
 html {
     background-color: black;
-    background-image: url("https://unpkg.com/three-globe@2.24.4/example/img/night-sky.png");
     font-family: 'DM Sans', sans-serif;
     box-sizing: border-box;
 }
@@ -599,10 +598,12 @@ button h3 {
     border-bottom-style: solid;
     border-width: 0.01px;
   }
-  
-  .accordion:hover {
-    background-color: rgba(255,255,255,0.2);
-  }
+
+@media (hover: hover) {
+    .accordion:hover {
+        background-color: rgba(255,255,255,0.2);
+    }
+}
   
   .accordion:after {
     content: '\002B';
