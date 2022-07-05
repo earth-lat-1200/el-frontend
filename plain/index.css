@@ -175,7 +175,7 @@ h2 {
     }
 }
 
-@media only screen and (max-width: 821px) {
+@media only screen and (max-width: 900px) {
 
     #station {
         margin: auto;
