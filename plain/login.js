@@ -1,10 +1,7 @@
-const loginForm = document.getElementById("login-form");
-const loginButton = document.getElementById("login-form-submit");
-const loginErrorMsg = document.getElementById("login-error-msg");
-
 function login() {
-    // const username = loginForm.username.value;
-    // const password = loginForm.password.value;
+    const username = $('#username-field')[0].value
+    const password = $('#password-field')[0].value
+    console.log(username)
 
     fetch("http://localhost:7071/api/Authenticate", {
         method: 'POST',
@@ -12,8 +9,8 @@ function login() {
             'Content-Type': 'application/json'
         },
         body: `{
-            "username": "admin",
-            "password": "admnpsswrd"
+            "username": "${username}",
+            "password": "${password}"
         }`,
     }).then(response => {
         if (!response.ok) {
@@ -21,6 +18,7 @@ function login() {
         }
         return response.json()
     }).then(data => {
-        console.log(data)
+        localStorage.setItem('token',data.result.value.token)
+        window.location = "http://localhost:63342/el-frontend/plain/statistics.html";
     }).catch(error => console.log(error))
 }

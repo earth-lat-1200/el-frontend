@@ -11,6 +11,7 @@
     <link rel="stylesheet" media="screen" href="https://fontlibrary.org//face/metropolis" type="text/css"/>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+    <script defer src="resources/libs/jquery.js"></script>
     <script defer src="login.js"></script>
     <script type="text/javascript" src="navbar.js"></script>
     <script type="text/javascript" src="accordion.js"></script>
@@ -44,8 +45,8 @@
 <div class="container">
     <p><h1 class="header">Login <span class="blueAccent">to see statistics</span></h1></p>
     <div id="login-form">
-        <input type="text" name="username" id="username-field" class="login-field" placeholder="Username" autocomplete="off">
-        <input type="password" name="password" id="password-field" class="login-field" placeholder="Password">
+        <input value="admin" type="text" name="username" id="username-field" class="login-field" placeholder="Username" autocomplete="off">
+        <input value="admnpsswrd" type="password" name="password" id="password-field" class="login-field" placeholder="Password">
         <button id="login-submit" onclick="login()">Login</button>
     </div>
 </div>

@@ -1,0 +1,27 @@
+.head-row{
+    padding: 15px;
+}
+
+.head-row > select, button{
+    transition: background-color 0.5s;
+    border-color: #4fb3ff;
+    border-width: 2px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.4em;
+    padding: 10px;
+}
+
+#logout-button{
+    float: right;
+    font-weight: bold;
+}
+#logout-button:hover{
+    background-color: #4fb3ff;
+    transition: background-color 0.5s;
+}
+
+option{
+    padding: 100px;
+}
