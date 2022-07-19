@@ -1,9 +1,19 @@
 .head-row{
     padding: 15px;
+    height: auto;
 }
 
-.head-row > select, button{
+.head-row::after{
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.head-row > select, button, input{
     transition: background-color 0.5s;
+    box-sizing: border-box;
+    height: 50px;
+    float: left;
     border-color: #4fb3ff;
     border-width: 2px;
     background-color: black;
@@ -11,6 +21,11 @@
     border-radius: 5px;
     font-size: 1.4em;
     padding: 10px;
+    vertical-align: top;
+}
+
+input{
+    margin-left: 10px;
 }
 
 #logout-button{
@@ -22,6 +37,31 @@
     transition: background-color 0.5s;
 }
 
-option{
-    padding: 100px;
+.row::after
+{
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.col-3
+{
+    float: left;
+    min-height: 1px;
+    padding: 0.8rem;
+    width: 50%;
+}
+
+
+@media (max-width: 700px)
+{
+    .col-3 { width: 100%; }
+}
+
+@media (max-width: 545px)
+{
+    #logout-button{
+        margin-left: 15px;
+        margin-top: 15px;
+    }
 }
