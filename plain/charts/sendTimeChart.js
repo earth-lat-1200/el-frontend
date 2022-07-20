@@ -1,21 +1,24 @@
-function createSendTimeChart(date, datapoints) {
+function createSendTimeChart(datapoints) {
     const labels = [''];
     const data = {
         labels: labels,
-        datasets: datapoints.map(x=>{
+        datasets: datapoints.map((item)=>{
+            const hideDataset = !(item.name===currentStationName)
+            const color = randomRGBColor();
             return {
-                label: 'A',
+                label: item.name,
                 data: labels.map(()=>{
-                    return [(x.start-hourOffset)*millisConverter, (x.end-hourOffset)*millisConverter];
+                    return [(item.start-hourOffset)*millisConverter, (item.end-hourOffset)*millisConverter];
                 }),
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
+                    `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.2)`,
                 ],
                 borderColor: [
-                    'rgb(255, 99, 132)',
+                    `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
                 ],
                 borderWidth: 1,
-                borderSkipped: false
+                borderSkipped: false,
+                hidden: hideDataset
             }
         })
     };
@@ -27,7 +30,10 @@ function createSendTimeChart(date, datapoints) {
             indexAxis: 'y',
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgb(255, 255, 255, 0.4)'
+                    }
                 },
                 x: {
                     ticks:{
@@ -41,6 +47,9 @@ function createSendTimeChart(date, datapoints) {
                         text: 'Uhrzeit'
                     },
                     type: 'time',
+                    grid: {
+                        color: 'rgb(255, 255, 255, 0.4)'
+                    }
                 },
             },
             responsive: true,
@@ -69,15 +78,5 @@ function createSendTimeChart(date, datapoints) {
         },
     };
 
-    new Chart("sendTimeChart", config)
-}
-
-// function getDateForXAxis(date, isEndDate){//the chart-library doesn't care about the date, so this seems unnecessary
-//     date.setDate(date.getDate()+isEndDate)
-//     const formatedDate = `${date.toISOString().substring(0,10)} 00:00:00`;
-//     return formatedDate
-// }
-
-function formatSeconds(seconds){
-    return new Date(millisConverter * seconds).toISOString().substring(11,16)
+    return new Chart("sendTimeChart", config)
 }

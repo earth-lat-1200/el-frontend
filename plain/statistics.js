@@ -1,15 +1,15 @@
 const hourOffset = 3600;
 const millisConverter = 1000
+let currentStationName
+let currentDate
+let sendTimeChart
+let sendTimeDataPoints
+let temperatureChart
+let temperatureDataPoints
 
 $(document).ready(function () {
     $('#datePicker')[0].value = new Date().toISOString().substring(0,10);
     get("http://localhost:7071/api/StationNames", loadStationNames);
-    const datapoints = [{start:0*hourOffset, end:12*hourOffset},{start: 4*hourOffset, end:14*hourOffset}];
-    let date = new Date($('#datePicker')[0].value)
-    //createTemperatureChart(labels, datapoints,"temperatureChart")
-    createSendTimeChart(date, datapoints)
-    //createTemperatureChart(labels, datapoints,"brightnessChart")
-    //createTemperatureChart(labels, datapoints,"uploadedPPMChart")
 });
 
 function get(url, fun) {
@@ -41,10 +41,77 @@ function loadStationNames(stationNamesDto) {
             value: x
         }));
     })
-    $('#stationNames').val(stationNamesDto.userStationName)
+    currentStationName = stationNamesDto.userStationName
+    $('#stationNames').val(currentStationName)
+    loadStatistics()
+}
+
+function loadStatistics(){
+    currentDate = new Date($('#datePicker')[0].value)
+    createNewLineChartData()
+    createNewBarChartData()
+    drawCharts()
+    //createTemperatureChart(labels, datapoints,"brightnessChart")
+    //createTemperatureChart(labels, datapoints,"uploadedPPMChart")
+}
+
+function createNewLineChartData(){
+    temperatureDataPoints = [
+        {
+            name: 'KEPLERUHR',
+            values:[{x:'1970-01-01 00:00:00',y:randomInteger(1,40)},{x:'1970-01-01 01:00:00',y:randomInteger(1,40)},{x:'1970-01-01 02:00:00',y:randomInteger(1,40)}]
+        },
+        {
+            name: 'Birkenau',
+            values:[{x:'1970-01-01 00:00:00',y:randomInteger(1,40)},{x:'1970-01-01 01:00:00',y:randomInteger(1,40)},{x:'1970-01-01 02:00:00',y:randomInteger(1,40)}]
+        }
+    ]
+}
+
+function createNewBarChartData() {
+    sendTimeDataPoints = [{name:'KEPLERUHR',start:randomInteger(1,4)*hourOffset, end:randomInteger(12,16)*hourOffset},{name:'Birkenau',start: randomInteger(3,7)*hourOffset, end:randomInteger(18,22)*hourOffset}];
+}
+
+function drawCharts(){
+    temperatureChart = createTemperatureChart(temperatureDataPoints,"temperatureChart")
+    sendTimeChart = createSendTimeChart(sendTimeDataPoints)
+}
+
+function onStationChanged(){
+    currentStationName = $('#stationNames').val()
+    destroyCharts()
+    drawCharts()
+}
+
+
+function destroyCharts()//while this is uglier and slower than updating the chart, once the user clicks on the label and thus hides/shows the chart, this state cannot be changed programmatically
+{
+    sendTimeChart.destroy()
+    temperatureChart.destroy()
 }
 
 function onDateChanged() {
-    let date = new Date($('#datePicker')[0].value)
-    console.log(date)
+    currentDate = new Date($('#datePicker')[0].value)
+    changeLineChartData(temperatureChart);
+    changeBarChartData(sendTimeChart)
+}
+
+function changeLineChartData(chart){
+    createNewLineChartData()
+    chart.data.datasets.forEach((dataset, index) => {
+        dataset.data=temperatureDataPoints[index].values
+    });
+    chart.update();
+}
+
+function changeBarChartData(chart)
+{
+    const labels = [''];
+    createNewBarChartData()
+    chart.data.datasets.forEach((dataset, index) => {
+        dataset.data=labels.map(()=>{
+            return [(sendTimeDataPoints[index].start-hourOffset)*millisConverter, (sendTimeDataPoints[index].end-hourOffset)*millisConverter];
+        })
+    });
+    chart.update();
 }
