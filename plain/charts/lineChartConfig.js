@@ -1,11 +1,11 @@
-function createTemperatureChart(datapoints, canvasName) {
+function createTemperatureChart(datapoints, canvas, title, chartColors, yAxisDescription) {
     const data = {
-        datasets: datapoints.map(x => {
-            const hideDataset = !(x.name===currentStationName)
-            const color = randomRGBColor();
+        datasets: datapoints.map((item, index) => {
+            const hideDataset = !(item.name === currentStationName)
+            const color = chartColors[index];
             return {
-                label: x.name,
-                data: x.values,
+                label: item.name,
+                data: item.values,
                 borderColor: `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`,
                 pointBackgroundColor: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
                 pointRadius: 4,
@@ -24,14 +24,14 @@ function createTemperatureChart(datapoints, canvasName) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Temperaturdate'
+                    text: title
                 },
                 tooltip: {
                     callbacks: {
                         title: function (context) {
                             return context[0].dataset.label
                         },
-                        label: function (context) {
+                        label: function (context) {//TODO the description of the datapoint should vary in different types of charts
                             const secondsSinceMidnight = (context.parsed.x + (hourOffset * millisConverter)) / millisConverter
                             const timeString = formatSeconds(secondsSinceMidnight)
                             const temperature = context.parsed.y
@@ -64,7 +64,7 @@ function createTemperatureChart(datapoints, canvasName) {
                     display: true,
                     title: {
                         display: true,
-                        text: 'Temperatur'
+                        text: yAxisDescription
                     },
                     min: -10,
                     max: 50,
@@ -75,5 +75,5 @@ function createTemperatureChart(datapoints, canvasName) {
             }
         },
     };
-    return new Chart(canvasName, config)
+    return new Chart(canvas, config)
 }

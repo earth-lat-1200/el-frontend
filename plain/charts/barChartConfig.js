@@ -1,17 +1,17 @@
-function createSendTimeChart(datapoints) {
+function createBarChart(datapoints, canvas, title, chartColors) {
     const labels = [''];
     const data = {
         labels: labels,
-        datasets: datapoints.map((item)=>{
-            const hideDataset = !(item.name===currentStationName)
-            const color = randomRGBColor();
+        datasets: datapoints.map((item, index) => {
+            const hideDataset = !(item.name === currentStationName)
+            const color = chartColors[index]
             return {
                 label: item.name,
-                data: labels.map(()=>{
-                    return [(item.start-hourOffset)*millisConverter, (item.end-hourOffset)*millisConverter];
+                data: labels.map(() => {
+                    return [(item.start - hourOffset) * millisConverter, (item.end - hourOffset) * millisConverter];
                 }),
                 backgroundColor: [
-                    `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.2)`,
+                    `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
                 ],
                 borderColor: [
                     `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
@@ -36,7 +36,7 @@ function createSendTimeChart(datapoints) {
                     }
                 },
                 x: {
-                    ticks:{
+                    ticks: {
                         beginAtZero: true
                     },
                     min: '1970-01-01 00:00:00',
@@ -44,7 +44,7 @@ function createSendTimeChart(datapoints) {
                     display: true,
                     title: {
                         display: true,
-                        text: 'Uhrzeit'
+                        text: "Uhrzeit"
                     },
                     type: 'time',
                     grid: {
@@ -56,21 +56,28 @@ function createSendTimeChart(datapoints) {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Sendezeiten'
+                    text: title
                 },
                 tooltip: {
                     callbacks: {
-                        title: function (context){
+                        title: function (context) {
                             return context[0].dataset.label
                         },
-                        label: function(context) {
+                        label: function (context) {
                             const barData = context.dataset.data[0]
-                            const startSeconds = (barData[0])/millisConverter
-                            const endSeconds = (barData[1])/millisConverter
-                            const startTimeString = formatSeconds(startSeconds+hourOffset)
-                            const endTimeString = formatSeconds(endSeconds+hourOffset)
+                            const startSeconds = (barData[0]) / millisConverter
+                            const endSeconds = (barData[1]) / millisConverter
+                            const startTimeString = formatSeconds(startSeconds + hourOffset)
+                            const endTimeString = formatSeconds(endSeconds + hourOffset)
                             let label = `${startTimeString}-${endTimeString}`
                             return label;
+                        }
+                    }
+                },
+                legend: {
+                    labels: {
+                        font: {
+                            color: '#ffffff'
                         }
                     }
                 }
@@ -78,5 +85,5 @@ function createSendTimeChart(datapoints) {
         },
     };
 
-    return new Chart("sendTimeChart", config)
+    return new Chart(canvas, config)
 }

@@ -1,16 +1,25 @@
 const hourOffset = 3600;
 const millisConverter = 1000
+
 let currentStationName
 let currentDate
-let sendTimeChart
-let sendTimeDataPoints
+let chartColors = []
+let sendTimesChart
+let sendTimesDataPoints
 let temperatureChart
 let temperatureDataPoints
 
 $(document).ready(function () {
-    $('#datePicker')[0].value = new Date().toISOString().substring(0,10);
+    configureChartJSDefaults()
+    $('#datePicker')[0].value = new Date().toISOString().substring(0, 10);
     get("http://localhost:7071/api/StationNames", loadStationNames);
 });
+
+function configureChartJSDefaults() {
+    Chart.defaults.color = "#ffffff";
+    Chart.defaults.font.family = 'Rubik';
+    Chart.defaults.font.size = 14;
+}
 
 function get(url, fun) {
     fetch(url, {
@@ -26,7 +35,7 @@ function get(url, fun) {
         return response.json()
     }).then(data => {
         fun(data.value)
-    }).catch(_=>logout())
+    }).catch(_ => logout())
 }
 
 function logout() {
@@ -46,38 +55,54 @@ function loadStationNames(stationNamesDto) {
     loadStatistics()
 }
 
-function loadStatistics(){
+function loadStatistics() {
     currentDate = new Date($('#datePicker')[0].value)
     createNewLineChartData()
     createNewBarChartData()
+    generateChartColors()
     drawCharts()
-    //createTemperatureChart(labels, datapoints,"brightnessChart")
-    //createTemperatureChart(labels, datapoints,"uploadedPPMChart")
 }
 
-function createNewLineChartData(){
+function createNewLineChartData() {
     temperatureDataPoints = [
         {
             name: 'KEPLERUHR',
-            values:[{x:'1970-01-01 00:00:00',y:randomInteger(1,40)},{x:'1970-01-01 01:00:00',y:randomInteger(1,40)},{x:'1970-01-01 02:00:00',y:randomInteger(1,40)}]
+            values: [{x: '1970-01-01 00:00:00', y: randomInteger(1, 40)}, {
+                x: '1970-01-01 01:00:00',
+                y: randomInteger(1, 40)
+            }, {x: '1970-01-01 02:00:00', y: randomInteger(1, 40)}]
         },
         {
             name: 'Birkenau',
-            values:[{x:'1970-01-01 00:00:00',y:randomInteger(1,40)},{x:'1970-01-01 01:00:00',y:randomInteger(1,40)},{x:'1970-01-01 02:00:00',y:randomInteger(1,40)}]
+            values: [{x: '1970-01-01 00:00:00', y: randomInteger(1, 40)}, {
+                x: '1970-01-01 01:00:00',
+                y: randomInteger(1, 40)
+            }, {x: '1970-01-01 02:00:00', y: randomInteger(1, 40)}]
         }
     ]
 }
 
 function createNewBarChartData() {
-    sendTimeDataPoints = [{name:'KEPLERUHR',start:randomInteger(1,4)*hourOffset, end:randomInteger(12,16)*hourOffset},{name:'Birkenau',start: randomInteger(3,7)*hourOffset, end:randomInteger(18,22)*hourOffset}];
+    sendTimesDataPoints = [{
+        name: 'KEPLERUHR',
+        start: randomInteger(1, 4) * hourOffset,
+        end: randomInteger(12, 16) * hourOffset
+    }, {name: 'Birkenau', start: randomInteger(3, 7) * hourOffset, end: randomInteger(18, 22) * hourOffset}];
 }
 
-function drawCharts(){
-    temperatureChart = createTemperatureChart(temperatureDataPoints,"temperatureChart")
-    sendTimeChart = createSendTimeChart(sendTimeDataPoints)
+function generateChartColors() {
+    const maxNumberOfStations = Math.max(sendTimesDataPoints.length, temperatureDataPoints.length)
+    for (let i = 0; i < maxNumberOfStations; i++) {
+        chartColors.push(randomRGBColor())
+    }
 }
 
-function onStationChanged(){
+function drawCharts() {
+    temperatureChart = createTemperatureChart(temperatureDataPoints, "temperatureChart", "Temperaturverlauf", chartColors, "Temperatur")
+    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Sendezeiten", chartColors)
+}
+
+function onStationChanged() {
     currentStationName = $('#stationNames').val()
     destroyCharts()
     drawCharts()
@@ -86,32 +111,31 @@ function onStationChanged(){
 
 function destroyCharts()//while this is uglier and slower than updating the chart, once the user clicks on the label and thus hides/shows the chart, this state cannot be changed programmatically
 {
-    sendTimeChart.destroy()
+    sendTimesChart.destroy()
     temperatureChart.destroy()
 }
 
 function onDateChanged() {
     currentDate = new Date($('#datePicker')[0].value)
-    changeLineChartData(temperatureChart);
-    changeBarChartData(sendTimeChart)
+    changeChartData(temperatureChart, temperatureDataPoints, createNewLineChartData, lineChartForEachFunction)
+    changeChartData(sendTimesChart, sendTimesDataPoints, createNewBarChartData, barChartForEachFunction)
 }
 
-function changeLineChartData(chart){
-    createNewLineChartData()
-    chart.data.datasets.forEach((dataset, index) => {
-        dataset.data=temperatureDataPoints[index].values
-    });
-    chart.update();
-}
-
-function changeBarChartData(chart)
-{
+function changeChartData(chart, dataPoints, createNewDataFun, forEachFun) {
     const labels = [''];
-    createNewBarChartData()
+    createNewDataFun()
     chart.data.datasets.forEach((dataset, index) => {
-        dataset.data=labels.map(()=>{
-            return [(sendTimeDataPoints[index].start-hourOffset)*millisConverter, (sendTimeDataPoints[index].end-hourOffset)*millisConverter];
-        })
+        forEachFun(dataset, index, dataPoints ,labels)
     });
     chart.update();
+}
+
+function lineChartForEachFunction(dataset, index, dataPoints) {
+    dataset.data = dataPoints[index].values
+}
+
+function barChartForEachFunction(dataset, index, dataPoints, labels) {
+    dataset.data = labels.map(() => {
+        return [(dataPoints[index].start - hourOffset) * millisConverter, (dataPoints[index].end - hourOffset) * millisConverter];
+    })
 }
