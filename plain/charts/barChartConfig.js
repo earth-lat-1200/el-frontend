@@ -8,7 +8,7 @@ function createBarChart(datapoints, canvas, title, chartColors) {
             return {
                 label: item.name,
                 data: labels.map(() => {
-                    return [(item.start - hourOffset) * millisConverter, (item.end - hourOffset) * millisConverter];
+                    return [(item.start - hourConverter) * millisConverter, (item.end - hourConverter) * millisConverter];
                 }),
                 backgroundColor: [
                     `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
@@ -67,8 +67,8 @@ function createBarChart(datapoints, canvas, title, chartColors) {
                             const barData = context.dataset.data[0]
                             const startSeconds = (barData[0]) / millisConverter
                             const endSeconds = (barData[1]) / millisConverter
-                            const startTimeString = formatSeconds(startSeconds + hourOffset)
-                            const endTimeString = formatSeconds(endSeconds + hourOffset)
+                            const startTimeString = formatSeconds(startSeconds + hourConverter)
+                            const endTimeString = formatSeconds(endSeconds + hourConverter)
                             let label = `${startTimeString}-${endTimeString}`
                             return label;
                         }

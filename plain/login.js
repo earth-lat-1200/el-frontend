@@ -1,7 +1,6 @@
 function login() {
     const username = $('#username-field')[0].value
     const password = $('#password-field')[0].value
-    console.log(username)
 
     fetch("http://localhost:7071/api/Authenticate", {
         method: 'POST',

@@ -1,4 +1,4 @@
-const hourOffset = 3600;
+const hourConverter = 3600;
 const millisConverter = 1000
 
 let currentStationName
@@ -8,11 +8,16 @@ let sendTimesChart
 let sendTimesDataPoints
 let temperatureChart
 let temperatureDataPoints
+let promises = []
 
 $(document).ready(function () {
     configureChartJSDefaults()
     $('#datePicker')[0].value = new Date().toISOString().substring(0, 10);
-    get("http://localhost:7071/api/StationNames", loadStationNames);
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+    get("http://localhost:7071/api/StationNames", loadStationNames, headers);
 });
 
 function configureChartJSDefaults() {
@@ -21,21 +26,19 @@ function configureChartJSDefaults() {
     Chart.defaults.font.size = 14;
 }
 
-function get(url, fun) {
-    fetch(url, {
+function get(url, fun, headers, body) {
+    promises.push(fetch(url, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: headers,
+        body: body
     }).then(response => {
         if (!response.ok) {
             logout()
         }
         return response.json()
     }).then(data => {
-        fun(data.value)
-    }).catch(_ => logout())
+        fun(data)
+    }).catch(e => console.log(e)))
 }
 
 function logout() {
@@ -44,13 +47,13 @@ function logout() {
 }
 
 function loadStationNames(stationNamesDto) {
-    stationNamesDto.stationNames.forEach(x => {
+    stationNamesDto.value.stationNames.forEach(x => {
         $('#stationNames').append($('<option>', {
             text: x,
             value: x
         }));
     })
-    currentStationName = stationNamesDto.userStationName
+    currentStationName = stationNamesDto.value.userStationName
     $('#stationNames').val(currentStationName)
     loadStatistics()
 }
@@ -58,9 +61,12 @@ function loadStationNames(stationNamesDto) {
 function loadStatistics() {
     currentDate = new Date($('#datePicker')[0].value)
     createNewLineChartData()
-    createNewBarChartData()
-    generateChartColors()
-    drawCharts()
+    fetchSendTimes()
+    Promise.allSettled(promises).then(_ =>
+    {
+        generateChartColors()
+        drawCharts()
+    })
 }
 
 function createNewLineChartData() {
@@ -82,12 +88,22 @@ function createNewLineChartData() {
     ]
 }
 
-function createNewBarChartData() {
-    sendTimesDataPoints = [{
-        name: 'KEPLERUHR',
-        start: randomInteger(1, 4) * hourOffset,
-        end: randomInteger(12, 16) * hourOffset
-    }, {name: 'Birkenau', start: randomInteger(3, 7) * hourOffset, end: randomInteger(18, 22) * hourOffset}];
+function fetchSendTimes() {
+    const referenceDateTime = currentDate.toISOString().substring(0, 10)
+    const clientDateTime = new Date().toISOString().substring(0, 19).replace('T', ' ')
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'referenceDateTime': `2022-07-28`,
+        'clientDateTime': `${clientDateTime}`
+    }
+    get("http://localhost:7071/api/SendTimes", assignSendTimesDataPoints, headers)
+}
+
+function assignSendTimesDataPoints(sendTimes) {
+    sendTimesDataPoints = sendTimes.result.value
+    // generateChartColors()
+    // drawCharts()
 }
 
 function generateChartColors() {
@@ -116,16 +132,30 @@ function destroyCharts()//while this is uglier and slower than updating the char
 }
 
 function onDateChanged() {
-    currentDate = new Date($('#datePicker')[0].value)
-    changeChartData(temperatureChart, temperatureDataPoints, createNewLineChartData, lineChartForEachFunction)
-    changeChartData(sendTimesChart, sendTimesDataPoints, createNewBarChartData, barChartForEachFunction)
+    const datePickerValue = $('#datePicker')[0].value
+    if (datePickerValue !== "") {
+        currentDate = new Date($('#datePicker')[0].value)
+        changeChartData(temperatureChart, temperatureDataPoints, createNewLineChartData, lineChartForEachFunction)
+        changeChartData(sendTimesChart, sendTimesDataPoints, createNewBarChartData, barChartForEachFunction)
+    } else {
+        if (new Date().toISOString().substring(0, 10) !== currentDate.toISOString().substring(0, 10)) {
+            const newDate = new Date().toISOString().substring(0, 10)
+            $('#datePicker')[0].value = newDate;
+            currentDate = new Date($('#datePicker')[0].value)
+            changeChartData(temperatureChart, temperatureDataPoints, createNewLineChartData, lineChartForEachFunction)
+            changeChartData(sendTimesChart, sendTimesDataPoints, createNewBarChartData, barChartForEachFunction)
+        } else {
+            const newDate = new Date().toISOString().substring(0, 10)
+            $('#datePicker')[0].value = newDate;
+        }
+    }
 }
 
 function changeChartData(chart, dataPoints, createNewDataFun, forEachFun) {
     const labels = [''];
-    createNewDataFun()
+    createNewDataFun()//what if this returns the data and asigns it to dataPoints?
     chart.data.datasets.forEach((dataset, index) => {
-        forEachFun(dataset, index, dataPoints ,labels)
+        forEachFun(dataset, index, dataPoints, labels)
     });
     chart.update();
 }
@@ -136,6 +166,6 @@ function lineChartForEachFunction(dataset, index, dataPoints) {
 
 function barChartForEachFunction(dataset, index, dataPoints, labels) {
     dataset.data = labels.map(() => {
-        return [(dataPoints[index].start - hourOffset) * millisConverter, (dataPoints[index].end - hourOffset) * millisConverter];
+        return [(dataPoints[index].start - hourConverter) * millisConverter, (dataPoints[index].end - hourConverter) * millisConverter];
     })
 }

@@ -32,7 +32,7 @@ function createTemperatureChart(datapoints, canvas, title, chartColors, yAxisDes
                             return context[0].dataset.label
                         },
                         label: function (context) {//TODO the description of the datapoint should vary in different types of charts
-                            const secondsSinceMidnight = (context.parsed.x + (hourOffset * millisConverter)) / millisConverter
+                            const secondsSinceMidnight = (context.parsed.x + (hourConverter * millisConverter)) / millisConverter
                             const timeString = formatSeconds(secondsSinceMidnight)
                             const temperature = context.parsed.y
                             return `${timeString}: ${temperature} C°`
