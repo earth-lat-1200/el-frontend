@@ -1,14 +1,14 @@
-function createBarChart(datapoints, canvas, title, chartColors) {
+function createBarChart(dataPoints, canvas, title) {
     const labels = [''];
     const data = {
         labels: labels,
-        datasets: datapoints.map((item, index) => {
-            const hideDataset = !(item.name === currentStationName)
+        datasets: dataPoints.map((item, index) => {
+            const hideDataset = item.name !== currentStationName
             const color = chartColors[index]
             return {
                 label: item.name,
                 data: labels.map(() => {
-                    return [(item.start - hourConverter) * millisConverter, (item.end - hourConverter) * millisConverter];
+                    return [(item.start - HOUR_CONVERTER) * MILLIS_CONVERTER, (item.end - HOUR_CONVERTER) * MILLIS_CONVERTER];
                 }),
                 backgroundColor: [
                     `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
@@ -65,10 +65,10 @@ function createBarChart(datapoints, canvas, title, chartColors) {
                         },
                         label: function (context) {
                             const barData = context.dataset.data[0]
-                            const startSeconds = (barData[0]) / millisConverter
-                            const endSeconds = (barData[1]) / millisConverter
-                            const startTimeString = formatSeconds(startSeconds + hourConverter)
-                            const endTimeString = formatSeconds(endSeconds + hourConverter)
+                            const startSeconds = (barData[0]) / MILLIS_CONVERTER
+                            const endSeconds = (barData[1]) / MILLIS_CONVERTER
+                            const startTimeString = formatSeconds(startSeconds + HOUR_CONVERTER)
+                            const endTimeString = formatSeconds(endSeconds + HOUR_CONVERTER)
                             let label = `${startTimeString}-${endTimeString}`
                             return label;
                         }

@@ -18,6 +18,7 @@ function login() {
         return response.json()
     }).then(data => {
         localStorage.setItem('token',data.result.value.token)
+        localStorage.setItem('station',data.result.value.stationName)
         window.location = "http://localhost:63342/el-frontend/plain/statistics.html";
     }).catch(error => console.log(error))
 }

@@ -1,16 +1,21 @@
-function createTemperatureChart(datapoints, canvas, title, chartColors, yAxisDescription) {
+function createLineChart(dataPoints, canvas, title, yAxisDescription) {
     const data = {
-        datasets: datapoints.map((item, index) => {
-            const hideDataset = !(item.name === currentStationName)
+        datasets: dataPoints.map((item, index) => {
+            const hideDataset = item.name !== currentStationName
             const color = chartColors[index];
             return {
                 label: item.name,
-                data: item.values,
+                data: item.values.map((dataPoint, innerIndex)=>{
+                    return {
+                        y: dataPoint,
+                        x: formatChartDate(innerIndex)
+                    }
+                }),
                 borderColor: `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`,
                 pointBackgroundColor: `rgb(${color[0]}, ${color[1]}, ${color[2]})`,
                 pointRadius: 4,
                 fill: false,
-                tension: 0.5,
+                tension: 0.0,
                 borderWidth: 2,
                 hidden: hideDataset
             }
@@ -29,13 +34,14 @@ function createTemperatureChart(datapoints, canvas, title, chartColors, yAxisDes
                 tooltip: {
                     callbacks: {
                         title: function (context) {
-                            return context[0].dataset.label
+                            const secondsSinceMidnight = (context[0].parsed.x + (HOUR_CONVERTER * MILLIS_CONVERTER)) / MILLIS_CONVERTER
+                            const time = formatSeconds(secondsSinceMidnight)
+                            return time
                         },
                         label: function (context) {//TODO the description of the datapoint should vary in different types of charts
-                            const secondsSinceMidnight = (context.parsed.x + (hourConverter * millisConverter)) / millisConverter
-                            const timeString = formatSeconds(secondsSinceMidnight)
+                            const stationName = context.dataset.label
                             const temperature = context.parsed.y
-                            return `${timeString}: ${temperature} C°`
+                            return ` ${stationName}: ${temperature} C°`
                         }
                     }
                 }
@@ -66,8 +72,8 @@ function createTemperatureChart(datapoints, canvas, title, chartColors, yAxisDes
                         display: true,
                         text: yAxisDescription
                     },
-                    min: -10,
-                    max: 50,
+                    min: 0,
+                    max: 70,
                     grid: {
                         color: 'rgb(255, 255, 255, 0.4)'
                     }
