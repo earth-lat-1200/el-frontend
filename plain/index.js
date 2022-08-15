@@ -3,7 +3,6 @@ const DEFAULT_PORTRAIT_ALTITUDE = 3.2;
 const LANDSCAPE_WIDTH_SIZE = 821;
 const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 
-let shownImage;
 let globe;
 let stations = [];
 let activeStation = {};
@@ -260,7 +259,7 @@ function getStationPicture() {
         }
     }).then(res => res.json())
         .then(res => {
-            return 'data:image/jpeg;base64,' + res.result.value.img
+            return 'data:image/jpeg;base64,' + res.result.value
         })
 }
 
