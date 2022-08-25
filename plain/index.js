@@ -257,10 +257,9 @@ function getStationPicture() {
             'Content-Type': 'application/json',
             'x-functions-key': FUNCTIONS_KEY
         }
-    }).then(res => res.json())
-        .then(res => {
-            return 'data:image/jpeg;base64,' + res.result.value
-        })
+    }).then(res => res.json()).then(res => {
+        return 'data:image/jpeg;base64,' + res.result.value
+    })
 }
 
 //endregion
