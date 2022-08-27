@@ -1,3 +1,4 @@
+const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 const HOUR_CONVERTER = 3600
 const MILLIS_CONVERTER = 1000
 const FONT_COLOR = '#ffffff'
@@ -9,13 +10,13 @@ let currentStationName
 let referenceDate
 let chartColors = []
 let sendTimesChart
-let sendTimesDataPoints
+let sendTimesDataPoints = []
 let temperatureChart
-let temperatureDataPoints
+let temperatureDataPoints = []
 let imagesPerHourChart
-let imagesPerHourDataPoints
+let imagesPerHourDataPoints = []
 let brightnessChart
-let brightnessDataPoints
+let brightnessDataPoints = []
 let promises = []
 
 $(document).ready(function () {
@@ -67,7 +68,7 @@ function fetchStatistics() {
 }
 
 function fetchSendTimes() {
-    get("https://earth-lat-1200.azurewebsites.net/api/SendTimes", assignSendTimesDataPoints, getHeaders())
+    get("http://localhost:7071/api/SendTimes", createSendTimesChart, getHeaders())
 }
 
 function getHeaders() {
@@ -76,7 +77,7 @@ function getHeaders() {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'referenceDateTime': `${getFormattedDate(referenceDate, false)}`,
         'timezoneOffset': `${getTimezoneOffset()}`,
-        'x-functions-key': FUNCTIONS_KEY
+        'x-functions-key': `${FUNCTIONS_KEY}`
     }
     return headers
 }
@@ -88,29 +89,33 @@ function get(url, fun, headers, body) {
         body: body
     }).then(response => {
         if (!response.ok) {
-            logout()
+            //logout()
+            console.log('not ok')
         }
         return response.json()
     }).then(data => {
         if (Math.floor(data.result.statusCode / 100) !== 2) {
-            logout()
+            //logout()
+            console.log('not ok')
         }
         fun(data)
-    }).catch(_ => logout()))
+    }).catch(e => console.log(e)))
 }
 
 function logout() {
     localStorage.removeItem('token')
-    window.location = "https://www.earthlat1200.org/mauseloch.html"
+    window.location = "http://localhost:63342/el-frontend/plain/mauseloch.html"
 }
 
-function assignSendTimesDataPoints(sendTimes) {
+function createSendTimesChart(sendTimes) {
     if (sendTimes === undefined) {
         sendTimesDataPoints = []
-        return
+    } else {
+        sendTimesDataPoints = sendTimes.result.value
     }
-    sendTimesDataPoints = sendTimes.result.value
-    addStations(sendTimes.result.value)
+    addStations(sendTimesDataPoints)
+    generateRequiredChartColors()
+    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Sendezeiten")
 }
 
 function addStations(dataPoints) {
@@ -122,43 +127,50 @@ function addStations(dataPoints) {
 }
 
 function fetchTemperatureValues() {
-    get("https://earth-lat-1200.azurewebsites.net/api/TemperatureValues", assignTemperaturesDataPoints, getHeaders())
+    get("http://localhost:7071/api/TemperatureValues", createTemperaturesChart, getHeaders())
 }
 
-function assignTemperaturesDataPoints(temperatureValues) {
+function createTemperaturesChart(temperatureValues) {
     if (temperatureValues === undefined) {
         temperatureDataPoints = []
-        return
+    } else {
+        temperatureDataPoints = temperatureValues.result.value
     }
-    temperatureDataPoints = temperatureValues.result.value
-    addStations(temperatureValues.result.value)
+    addStations(temperatureDataPoints)
+    generateRequiredChartColors()
+    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperaturverlauf", "C°")
 }
 
 
 function fetchImagesPerHour() {
-    get("https://earth-lat-1200.azurewebsites.net/api/ImagesPerHour", assignImagesPerHourDataPoints, getHeaders())
+    get("http://localhost:7071/api/ImagesPerHour", createImagesPerHourChart, getHeaders())
 }
 
-function assignImagesPerHourDataPoints(imagesPerHour) {
+function createImagesPerHourChart(imagesPerHour) {
     if (imagesPerHour === undefined) {
         imagesPerHourDataPoints = []
-        return
+    } else {
+        imagesPerHourDataPoints = imagesPerHour.result.value
     }
-    imagesPerHourDataPoints = imagesPerHour.result.value
-    addStations(imagesPerHour.result.value)
+    addStations(imagesPerHourDataPoints)
+    generateRequiredChartColors()
+    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload-Aktivität", "Bilder pro Stunde")
 }
 
 function fetchBrightnessValues() {
-    get("https://earth-lat-1200.azurewebsites.net/api/BrightnessValues", assignBrightnessDataPoints, getHeaders())
+    get("http://localhost:7071/api/BrightnessValues", createBrightnessChart, getHeaders())
 }
 
-function assignBrightnessDataPoints(brightnessValues) {
+function createBrightnessChart(brightnessValues) {
     if (brightnessValues === undefined) {
         brightnessDataPoints = []
-        return
     }
-    brightnessDataPoints = brightnessValues.result.value
-    addStations(brightnessValues.result.value)
+    else{
+        brightnessDataPoints = brightnessValues.result.value
+    }
+    addStations(brightnessDataPoints)
+    generateRequiredChartColors()
+    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Helligkeitsverlauf", "Helligkeit")
 }
 
 function waitForPromises(fun) {
@@ -166,18 +178,18 @@ function waitForPromises(fun) {
         if (p.map(x => x.status).includes('rejected')) {
             alert('Some statistics could not be loaded')
         }
-        generateChartColors()
+        //generateRequiredChartColors()
         loadStations()
         if (typeof fun === 'function') {
             fun()
         }
-        drawCharts()
+        //drawCharts()
     })
 }
 
-function generateChartColors() {
+function generateRequiredChartColors() {
     const maxNumberOfStations = Math.max(sendTimesDataPoints.length, temperatureDataPoints.length, imagesPerHourDataPoints.length, brightnessDataPoints.length)
-    for (let i = 0; i < maxNumberOfStations; i++) {
+    for (let i = chartColors.length; i < maxNumberOfStations; i++) {
         chartColors.push(randomRGBColor())
     }
 }
@@ -229,9 +241,10 @@ function onDateChanged() {
 
 function fetchNewStatistics() {
     referenceDate = new Date($('#datePicker')[0].value)
+    destroyCharts()
     fetchStatistics()
     unloadStationNames()
-    waitForPromises(destroyCharts)
+    waitForPromises()
 }
 
 function unloadStationNames() {

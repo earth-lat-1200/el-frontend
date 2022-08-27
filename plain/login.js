@@ -1,12 +1,15 @@
+const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
+
+
 function login() {
     const username = $('#username-field')[0].value
     const password = $('#password-field')[0].value
 
-    fetch("https://earth-lat-1200.azurewebsites.net/api/Authenticate", {
+    fetch("http://localhost:7071/api/Authenticate", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'x-functions-key': FUNCTIONS_KEY
+            'x-functions-key': `${FUNCTIONS_KEY}`
         },
         body: `{
             "username": "${username}",
@@ -29,5 +32,5 @@ function login() {
 function forward(data) {
     localStorage.setItem('token', data.result.value.token)
     localStorage.setItem('station', data.result.value.stationName)
-    window.location = "https://www.earthlat1200.org/statistics.html";
+    window.location = "http://localhost:63342/el-frontend/plain/statistics.html";
 }
