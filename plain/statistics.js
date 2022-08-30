@@ -68,7 +68,7 @@ function fetchStatistics() {
 }
 
 function fetchSendTimes() {
-    get("http://localhost:7071/api/SendTimes", createSendTimesChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/SendTimes", createSendTimesChart, getHeaders())
 }
 
 function getHeaders() {
@@ -89,22 +89,20 @@ function get(url, fun, headers, body) {
         body: body
     }).then(response => {
         if (!response.ok) {
-            //logout()
-            console.log('not ok')
+            logout()
         }
         return response.json()
     }).then(data => {
         if (Math.floor(data.result.statusCode / 100) !== 2) {
-            //logout()
-            console.log('not ok')
+            logout()
         }
         fun(data)
-    }).catch(e => console.log(e)))
+    }).catch(_ => logout()))
 }
 
 function logout() {
     localStorage.removeItem('token')
-    window.location = "http://localhost:63342/el-frontend/plain/mauseloch.html"
+    window.location = "https://www.earthlat1200.org/mauseloch.html"
 }
 
 function createSendTimesChart(sendTimes) {
@@ -127,7 +125,7 @@ function addStations(dataPoints) {
 }
 
 function fetchTemperatureValues() {
-    get("http://localhost:7071/api/TemperatureValues", createTemperaturesChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/TemperatureValues", createTemperaturesChart, getHeaders())
 }
 
 function createTemperaturesChart(temperatureValues) {
@@ -143,7 +141,7 @@ function createTemperaturesChart(temperatureValues) {
 
 
 function fetchImagesPerHour() {
-    get("http://localhost:7071/api/ImagesPerHour", createImagesPerHourChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/ImagesPerHour", createImagesPerHourChart, getHeaders())
 }
 
 function createImagesPerHourChart(imagesPerHour) {
@@ -158,14 +156,13 @@ function createImagesPerHourChart(imagesPerHour) {
 }
 
 function fetchBrightnessValues() {
-    get("http://localhost:7071/api/BrightnessValues", createBrightnessChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/BrightnessValues", createBrightnessChart, getHeaders())
 }
 
 function createBrightnessChart(brightnessValues) {
     if (brightnessValues === undefined) {
         brightnessDataPoints = []
-    }
-    else{
+    } else {
         brightnessDataPoints = brightnessValues.result.value
     }
     addStations(brightnessDataPoints)
@@ -173,17 +170,13 @@ function createBrightnessChart(brightnessValues) {
     brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Helligkeitsverlauf", "Helligkeit")
 }
 
-function waitForPromises(fun) {
+function waitForPromises() {
     Promise.allSettled(promises).then(p => {
         if (p.map(x => x.status).includes('rejected')) {
             alert('Some statistics could not be loaded')
         }
-        //generateRequiredChartColors()
-        loadStations()
-        if (typeof fun === 'function') {
-            fun()
-        }
-        //drawCharts()
+        loadStationNames()
+        promises = []
     })
 }
 
@@ -194,7 +187,7 @@ function generateRequiredChartColors() {
     }
 }
 
-function loadStations() {
+function loadStationNames() {
     stationNames.forEach(x => {
         $('#stationNames').append($('<option>', {
             text: x,
@@ -242,8 +235,9 @@ function onDateChanged() {
 function fetchNewStatistics() {
     referenceDate = new Date($('#datePicker')[0].value)
     destroyCharts()
-    fetchStatistics()
+    $('#stationNames').invisible()
     unloadStationNames()
+    fetchStatistics()
     waitForPromises()
 }
 

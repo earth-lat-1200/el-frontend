@@ -30,8 +30,7 @@ function getTimezoneOffsetHours() {
 
 function getFormattedDate(date, local) {
     if (local) {
-        const offset = -getTimezoneOffset()
-        date = new Date(date.getTime() - (offset * 60 * 1000))
+        date = new Date(date.getTime() + (getTimezoneOffset() * 60 * 1000))
     }
     return date.toISOString().split('T')[0]
 }

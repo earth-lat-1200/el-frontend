@@ -8,7 +8,7 @@ function createLineChart(dataPoints, canvas, title, description) {
                 data: item.values.map((dataPoint, innerIndex) => {
                     const day = ((innerIndex / 24) | 0) + 1
                     return {
-                        y: dataPoint,
+                        y: Math.round((dataPoint + Number.EPSILON) * 100) / 100,
                         x: formatChartDate(innerIndex % 24, day)
                     }
                 }),
