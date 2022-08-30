@@ -1,0 +1,78 @@
+.head-row {
+    padding: 10px;
+    height: auto;
+    width: 100%;
+    position: fixed;
+    z-index: 99;
+    background-color: black;
+}
+
+.head-row::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.head-row > select, button, input {
+    position: relative;
+    transition: background-color 0.5s;
+    box-sizing: border-box;
+    height: 50px;
+    float: left;
+    border-color: #4fb3ff;
+    border-width: 2px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    font-size: 1.4em;
+    padding: 10px;
+    vertical-align: top;
+}
+
+select {
+    margin-left: 10px;
+}
+
+#logout-button {
+    float: right;
+    font-weight: bold;
+}
+
+#logout-button:hover {
+    background-color: #4fb3ff;
+    transition: background-color 0.5s;
+}
+
+.row::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.col-margin {
+    float: left;
+    min-height: 1px;
+    padding: 0.8rem;
+    width: 5%;
+}
+
+.col-main {
+    margin-top: 70px;
+    float: left;
+    min-height: 1px;
+    padding: 0.8rem;
+    width: 90%;
+}
+
+
+/*@media (max-width: 700px)*/
+/*{*/
+/*    .col-3 { width: 100%; }*/
+/*}*/
+
+@media (max-width: 545px) {
+    #logout-button {
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+}
