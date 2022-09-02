@@ -68,25 +68,24 @@ function fetchStatistics() {
 }
 
 function fetchSendTimes() {
-    get("https://earth-lat-1200.azurewebsites.net/api/SendTimes", createSendTimesChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/SendTimes", getHeaders(), createSendTimesChart)
 }
 
 function getHeaders() {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'referenceDateTime': `${getFormattedDate(referenceDate, false)}`,
+        'referenceDate': `${getFormattedDate(referenceDate, false)}`,
         'timezoneOffset': `${getTimezoneOffset()}`,
         'x-functions-key': `${FUNCTIONS_KEY}`
     }
     return headers
 }
 
-function get(url, fun, headers, body) {
+function get(url, headers, fun) {
     promises.push(fetch(url, {
         method: 'GET',
         headers: headers,
-        body: body
     }).then(response => {
         if (!response.ok) {
             logout()
@@ -124,8 +123,15 @@ function addStations(dataPoints) {
     })
 }
 
+function generateRequiredChartColors() {
+    const maxNumberOfStations = Math.max(sendTimesDataPoints.length, temperatureDataPoints.length, imagesPerHourDataPoints.length, brightnessDataPoints.length)
+    for (let i = chartColors.length; i < maxNumberOfStations; i++) {
+        chartColors.push(randomRGBColor())
+    }
+}
+
 function fetchTemperatureValues() {
-    get("https://earth-lat-1200.azurewebsites.net/api/TemperatureValues", createTemperaturesChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/TemperatureValues", getHeaders(), createTemperaturesChart)
 }
 
 function createTemperaturesChart(temperatureValues) {
@@ -141,7 +147,7 @@ function createTemperaturesChart(temperatureValues) {
 
 
 function fetchImagesPerHour() {
-    get("https://earth-lat-1200.azurewebsites.net/api/ImagesPerHour", createImagesPerHourChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/ImagesPerHour", getHeaders(), createImagesPerHourChart)
 }
 
 function createImagesPerHourChart(imagesPerHour) {
@@ -156,7 +162,7 @@ function createImagesPerHourChart(imagesPerHour) {
 }
 
 function fetchBrightnessValues() {
-    get("https://earth-lat-1200.azurewebsites.net/api/BrightnessValues", createBrightnessChart, getHeaders())
+    get("https://earth-lat-1200.azurewebsites.net/api/BrightnessValues", getHeaders(), createBrightnessChart)
 }
 
 function createBrightnessChart(brightnessValues) {
@@ -180,13 +186,6 @@ function waitForPromises() {
     })
 }
 
-function generateRequiredChartColors() {
-    const maxNumberOfStations = Math.max(sendTimesDataPoints.length, temperatureDataPoints.length, imagesPerHourDataPoints.length, brightnessDataPoints.length)
-    for (let i = chartColors.length; i < maxNumberOfStations; i++) {
-        chartColors.push(randomRGBColor())
-    }
-}
-
 function loadStationNames() {
     stationNames.forEach(x => {
         $('#stationNames').append($('<option>', {
@@ -195,7 +194,7 @@ function loadStationNames() {
         }))
     })
     $('#stationNames').val(currentStationName)
-    if ($('#stationNames option').length > 0) {
+    if ($('#stationNames option').length > 1) {
         $("#stationNames").visible();
     }
 }
