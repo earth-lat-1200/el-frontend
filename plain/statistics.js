@@ -4,8 +4,11 @@ const MILLIS_CONVERTER = 1000
 const FONT_COLOR = '#ffffff'
 const FONT_FAMILY = 'Rubik'
 const FONT_SIZE = 14
+const FONT_SIZE_TITLE = 28
+const FONT_SIZE_LABEL = 20
+const START_STATION = '*'
 
-let stationNames = new Set()
+let stationNames = new Set(START_STATION)
 let currentStationName
 let referenceDate
 let chartColors = []
@@ -23,7 +26,7 @@ $(document).ready(function () {
     configureChartJSDefaults()
     loadCurrentDateIntoDatePicker()
     $('#stationNames').invisible()
-    currentStationName = localStorage.getItem('station')
+    currentStationName = START_STATION
     loadStatistics()
 })
 
@@ -194,7 +197,7 @@ function loadStationNames() {
         }))
     })
     $('#stationNames').val(currentStationName)
-    if ($('#stationNames option').length > 1) {
+    if ($('#stationNames option').length > 2) {
         $("#stationNames").visible();
     }
 }

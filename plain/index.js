@@ -23,7 +23,6 @@ function getMarkerData(stations) {
     });
 }
 
-
 function getClosestStation() {
     const nullMeridian = calcNoonMeridian();
     const currentLongitude = nullMeridian;

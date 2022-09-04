@@ -41,6 +41,6 @@ function getFormattedTooltipDate(milliseconds) {
     let date = new Date(getFormattedDate(referenceDate, false))
     date.setDate(date.getDate() - 1)
     date.setSeconds(date.getSeconds() + seconds - HOUR_CONVERTER)
-    const dateString = getFormattedDate(date, true)
+    const dateString = getFormattedDate(date, true).replaceAll('-','/')
     return `${timeString} ${dateString}`
 }
