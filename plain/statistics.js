@@ -226,7 +226,7 @@ function destroyCharts()//while this is uglier and slower than updating the char
 }
 
 function onDateChanged() {
-    stationNames = new Set()
+    stationNames = new Set(START_STATION)
     if ($('#datePicker')[0].value !== "") {
         fetchNewStatistics()
     } else {
