@@ -33,19 +33,17 @@ function createBarChart(dataPoints, canvas, title) {
                 y: {
                     beginAtZero: true,
                     grid: {
-                        color: 'rgb(255, 255, 255, 0.4)'
+                        color: gridConfig
                     }
                 },
                 x: {
-                    ticks: {
-                        beginAtZero: true
-                    },
+                    ticks: tickConfig,
                     min: formatChartDate(12 + getTimezoneOffsetHours(), 1),
                     max: formatChartDate(12 + getTimezoneOffsetHours(), 3),
                     display: true,
                     title: {
                         display: true,
-                        text: "Uhrzeit",
+                        text: "local time",
                         font: {
                             size: FONT_SIZE_LABEL
                         }
@@ -84,7 +82,7 @@ function createBarChart(dataPoints, canvas, title) {
                 legend: {
                     labels: {
                         font: {
-                            color: '#ffffff'
+                            color: DEFAULT_FONT_COLOR
                         }
                     }
                 }

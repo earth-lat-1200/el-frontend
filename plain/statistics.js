@@ -1,7 +1,8 @@
 const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 const HOUR_CONVERTER = 3600
 const MILLIS_CONVERTER = 1000
-const FONT_COLOR = '#ffffff'
+const DEFAULT_FONT_COLOR = '#ffffff'
+const HIGHLIGHTED_FONT_COLOR = '#00ff00'
 const FONT_FAMILY = 'Rubik'
 const FONT_SIZE = 14
 const FONT_SIZE_TITLE = 28
@@ -31,7 +32,7 @@ $(document).ready(function () {
 })
 
 function configureChartJSDefaults() {
-    Chart.defaults.color = FONT_COLOR
+    Chart.defaults.color = DEFAULT_FONT_COLOR
     Chart.defaults.font.family = FONT_FAMILY
     Chart.defaults.font.size = FONT_SIZE
 }
@@ -115,7 +116,7 @@ function createSendTimesChart(sendTimes) {
     }
     addStations(sendTimesDataPoints)
     generateRequiredChartColors()
-    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Sendezeiten")
+    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Broadcast times")
 }
 
 function addStations(dataPoints) {
@@ -145,7 +146,7 @@ function createTemperaturesChart(temperatureValues) {
     }
     addStations(temperatureDataPoints)
     generateRequiredChartColors()
-    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperaturverlauf", "C°")
+    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°")
 }
 
 
@@ -161,7 +162,7 @@ function createImagesPerHourChart(imagesPerHour) {
     }
     addStations(imagesPerHourDataPoints)
     generateRequiredChartColors()
-    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload-Aktivität", "Bilder pro Stunde")
+    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour")
 }
 
 function fetchBrightnessValues() {
@@ -176,7 +177,7 @@ function createBrightnessChart(brightnessValues) {
     }
     addStations(brightnessDataPoints)
     generateRequiredChartColors()
-    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Helligkeitsverlauf", "Helligkeit")
+    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness")
 }
 
 function waitForPromises() {
@@ -204,10 +205,10 @@ function loadStationNames() {
 
 
 function drawCharts() {
-    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Sendezeiten")
-    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperaturverlauf", "Grad")
-    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload-Aktivität", "Bilder pro Stunde")
-    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Helligkeitsverlauf", "Helligkeit")
+    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Broadcast times")
+    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°")
+    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour")
+    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness")
 }
 
 function onStationChanged() {
@@ -226,7 +227,7 @@ function destroyCharts()//while this is uglier and slower than updating the char
 }
 
 function onDateChanged() {
-    stationNames = new Set()
+    stationNames = new Set(START_STATION)
     if ($('#datePicker')[0].value !== "") {
         fetchNewStatistics()
     } else {
