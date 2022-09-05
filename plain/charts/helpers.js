@@ -1,3 +1,21 @@
+const tickConfig = {
+    beginAtZero: true,
+    callback: function (context,index) {
+        if (context === '12PM' && index === 24-getTimezoneOffsetHours()) {
+            return `noon today: ${context}`
+        }
+        return context
+    },
+    color: function (context) {
+        if (context.index >= 12-getTimezoneOffsetHours() && context.index <= 36-getTimezoneOffsetHours()) {
+            return HIGHLIGHTED_FONT_COLOR
+        }
+        return DEFAULT_FONT_COLOR
+    }
+}
+
+const gridConfig = 'rgb(255, 255, 255, 0.4)'
+
 function formatSeconds(seconds) {
     return new Date(MILLIS_CONVERTER * seconds).toISOString().substring(11, 16)
 }

@@ -55,22 +55,20 @@ function createLineChart(dataPoints, canvas, title, description) {
             },
             scales: {
                 x: {
-                    ticks: {
-                        beginAtZero: true
-                    },
+                    ticks: tickConfig,
                     min: formatChartDate(12 + getTimezoneOffsetHours(), 1),
                     max: formatChartDate(12 + getTimezoneOffsetHours(), 3),
                     display: true,
                     title: {
                         display: true,
-                        text: 'Uhrzeit',
+                        text: 'local time',
                         font:{
                             size: FONT_SIZE_LABEL
                         }
                     },
                     type: 'time',
                     grid: {
-                        color: 'rgb(255, 255, 255, 0.4)'
+                        color: gridConfig
                     }
                 },
                 y: {
@@ -85,7 +83,7 @@ function createLineChart(dataPoints, canvas, title, description) {
                     min: 0,
                     max: 100,
                     grid: {
-                        color: 'rgb(255, 255, 255, 0.4)'
+                        color: gridConfig
                     }
                 }
             }
