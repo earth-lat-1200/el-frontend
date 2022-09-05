@@ -1,7 +1,7 @@
 function createLineChart(dataPoints, canvas, title, description) {
     const data = {
         datasets: dataPoints.map((item, index) => {
-            const hideDataset = item.name !== currentStationName
+            const hideDataset = (item.name !== currentStationName) && (currentStationName!=='*')
             const color = chartColors[index];
             return {
                 label: item.name,
@@ -30,7 +30,10 @@ function createLineChart(dataPoints, canvas, title, description) {
             plugins: {
                 title: {
                     display: true,
-                    text: title
+                    text: title,
+                    font:{
+                        size: FONT_SIZE_TITLE
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -60,7 +63,10 @@ function createLineChart(dataPoints, canvas, title, description) {
                     display: true,
                     title: {
                         display: true,
-                        text: 'Uhrzeit'
+                        text: 'Uhrzeit',
+                        font:{
+                            size: FONT_SIZE_LABEL
+                        }
                     },
                     type: 'time',
                     grid: {
@@ -71,7 +77,10 @@ function createLineChart(dataPoints, canvas, title, description) {
                     display: true,
                     title: {
                         display: true,
-                        text: description
+                        text: description,
+                        font:{
+                            size: FONT_SIZE_LABEL
+                        }
                     },
                     min: 0,
                     max: 100,

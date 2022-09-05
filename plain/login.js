@@ -30,7 +30,6 @@ function login() {
 }
 
 function forward(data) {
-    localStorage.setItem('token', data.result.value.token)
-    localStorage.setItem('station', data.result.value.stationName)
+    localStorage.setItem('token', data.result.value)
     window.location = "https://www.earthlat1200.org/statistics.html";
 }

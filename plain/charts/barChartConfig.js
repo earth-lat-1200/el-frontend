@@ -3,7 +3,7 @@ function createBarChart(dataPoints, canvas, title) {
     const data = {
         labels: labels,
         datasets: dataPoints.map((item, index) => {
-            const hideDataset = item.name !== currentStationName
+            const hideDataset = (item.name !== currentStationName) && (currentStationName !== '*')
             const color = chartColors[index]
             return {
                 label: item.name,
@@ -40,12 +40,15 @@ function createBarChart(dataPoints, canvas, title) {
                     ticks: {
                         beginAtZero: true
                     },
-                    min: formatChartDate(12+getTimezoneOffsetHours(),1),
-                    max: formatChartDate(12+getTimezoneOffsetHours(),3),
+                    min: formatChartDate(12 + getTimezoneOffsetHours(), 1),
+                    max: formatChartDate(12 + getTimezoneOffsetHours(), 3),
                     display: true,
                     title: {
                         display: true,
-                        text: "Uhrzeit"
+                        text: "Uhrzeit",
+                        font: {
+                            size: FONT_SIZE_LABEL
+                        }
                     },
                     type: 'time',
                     time: {
@@ -60,7 +63,10 @@ function createBarChart(dataPoints, canvas, title) {
             plugins: {
                 title: {
                     display: true,
-                    text: title
+                    text: title,
+                    font: {
+                        size: FONT_SIZE_TITLE
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -71,7 +77,7 @@ function createBarChart(dataPoints, canvas, title) {
                             const barData = context.dataset.data[0]
                             const startDateTimeString = getFormattedTooltipDate(barData[0])
                             const endDateTimeString = getFormattedTooltipDate(barData[1])
-                            return [`${startDateTimeString}-`, endDateTimeString];
+                            return [startDateTimeString, `-${endDateTimeString}`];
                         }
                     }
                 },
