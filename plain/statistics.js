@@ -2,12 +2,15 @@ const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA=='
 const HOUR_CONVERTER = 3600
 const MILLIS_CONVERTER = 1000
 const DEFAULT_FONT_COLOR = '#ffffff'
-const HIGHLIGHTED_FONT_COLOR = '#00ff00'
+const HIGHLIGHTED_FONT_COLOR = '#99ff99'
 const FONT_FAMILY = 'Rubik'
 const FONT_SIZE = 14
 const FONT_SIZE_TITLE = 28
 const FONT_SIZE_LABEL = 20
 const START_STATION = '*'
+const LINE_CHART_START = 0
+const NORMAL_LINE_CHART_END = 100
+const BRIGHTNESS_LINE_CHART_END = 5000000
 
 let stationNames = new Set(START_STATION)
 let currentStationName
@@ -146,7 +149,7 @@ function createTemperaturesChart(temperatureValues) {
     }
     addStations(temperatureDataPoints)
     generateRequiredChartColors()
-    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°")
+    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°", LINE_CHART_START, NORMAL_LINE_CHART_END)
 }
 
 
@@ -162,7 +165,7 @@ function createImagesPerHourChart(imagesPerHour) {
     }
     addStations(imagesPerHourDataPoints)
     generateRequiredChartColors()
-    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour")
+    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour", LINE_CHART_START, NORMAL_LINE_CHART_END)
 }
 
 function fetchBrightnessValues() {
@@ -177,7 +180,7 @@ function createBrightnessChart(brightnessValues) {
     }
     addStations(brightnessDataPoints)
     generateRequiredChartColors()
-    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness")
+    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness", LINE_CHART_START, BRIGHTNESS_LINE_CHART_END)
 }
 
 function waitForPromises() {
@@ -206,9 +209,9 @@ function loadStationNames() {
 
 function drawCharts() {
     sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Broadcast times")
-    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°")
-    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour")
-    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness")
+    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°", LINE_CHART_START, NORMAL_LINE_CHART_END)
+    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour", LINE_CHART_START, NORMAL_LINE_CHART_END)
+    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness", LINE_CHART_START, BRIGHTNESS_LINE_CHART_END)
 }
 
 function onStationChanged() {
