@@ -1,5 +1,6 @@
 function createBarChart(dataPoints, canvas, title) {
     const labels = [''];
+
     const data = {
         labels: labels,
         datasets: dataPoints.map((item, index) => {
