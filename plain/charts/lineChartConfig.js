@@ -1,7 +1,14 @@
 function createLineChart(dataPoints, canvas, title, description, min, max) {
+    let axisType;
+    if (max > NORMAL_LINE_CHART_END) {
+        axisType = 'logarithmic'
+    } else {
+        axisType = 'linear'
+    }
+
     const data = {
         datasets: dataPoints.map((item, index) => {
-            console.log(item)
+
             const hideDataset = (item.name !== currentStationName) && (currentStationName !== '*')
             const color = chartColors[index];
             return {
@@ -23,6 +30,7 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
             }
         })
     };
+
     const config = {
         type: 'line',
         data: data,
@@ -73,6 +81,7 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
                     }
                 },
                 y: {
+                    type: axisType,
                     display: true,
                     title: {
                         display: true,
