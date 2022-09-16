@@ -3,13 +3,109 @@ const DEFAULT_PORTRAIT_ALTITUDE = 3.2;
 const LANDSCAPE_WIDTH_SIZE = 821;
 const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 
-let globe;
+let globe = {};
+let promises = [];
+let lng = 0;
 let stations = [];
 let activeStation = {};
 
+document.addEventListener("DOMContentLoaded", function () {
+    getStations().then(() => {
+        lng = calcNoonMeridian()
+        setClosestStation()
+        Promise.allSettled(promises).then(_ => {
+            createGlobe()
+            loadImage();
+            function refresh() {
+                let arcData = getArcData()
+                drawArcOnGlobe(arcData)
+                setTimeout(refresh, 5000);
+            }
+            refresh();
+            setGlobePOV();
+            promises = []
+        })
+    })
+
+})
+
+function createGlobe() {
+    let gData = getMarkerData(stations);
+    globe = Globe()
+        .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+        .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
+        .width(calcWidth())
+        .height(window.innerHeight)
+        .showAtmosphere(true)
+        .htmlElementsData(gData)
+        .htmlElement(d => {
+            return drawMarker(d)
+        })
+        (document.getElementById('globe'))
+}
+
+function getArcData() {
+    const arcData = [
+        {
+            startLat: 0,
+            startLng: lng,
+            endLat: 90,
+            endLng: lng,
+            color: "#d09f0c"
+        },
+        {
+            startLat: 0,
+            startLng: lng,
+            endLat: -90,
+            endLng: lng,
+            color: "#d09f0c"
+        }
+    ];
+    return arcData
+}
+
+function drawArcOnGlobe(arcData) {
+    globe
+        .arcsData(arcData)
+        .arcColor('color')
+        .arcAltitude(0)
+        .arcStroke(1)
+        .arcDashGap(0)
+}
+
+function drawMarker(d) {
+    const el = document.createElement('img');
+    if (d.stationId === activeStation.stationId) {
+        el.src = './resources/marker_red.svg';
+        el.style.opacity = 0.8;
+    } else {
+        el.src = './resources/marker_white.svg';
+        el.style.opacity = 0.5;
+    }
+    el.style.width = `${d.size}px`;
+    el.id = d.stationId;
+    el.className = "stationIcon"
+    el.style['pointer-events'] = 'auto';
+    el.style.cursor = 'pointer';
+    el.onclick = () => {
+        activeStation = stations[d.id];
+        loadImage();
+        const stationIcons = document.getElementsByClassName("stationIcon");
+        for (let stationIcon of stationIcons) {
+            stationIcon.src = './resources/marker_white.svg';
+            stationIcon.style.opacity = 0.5;
+        }
+        el.src = './resources/marker_red.svg';
+        el.style.opacity = 0.8;
+    };
+    return el;
+}
+
 function getMarkerData(stations) {
     let index = 0;
-    return stations.map(station => {
+    return stations
+        .filter(station => station.latitude !== 0 && station.longitude !== 0)
+        .map(station => {
         return {
             id: index++,
             stationId: station.stationId,
@@ -23,105 +119,20 @@ function getMarkerData(stations) {
     });
 }
 
-function getClosestStation() {
+function setClosestStation() {
     const nullMeridian = calcNoonMeridian();
-    const currentLongitude = nullMeridian;
-    const result = stations.reduce((prev, curr) => {
-        const distanceCurr = curr.longitude - currentLongitude;
-        const distancePrev = prev.longitude - currentLongitude;
-
-        return Math.abs(distanceCurr) < Math.abs(distancePrev) ? curr : prev;
-    }, {longitude: -20000.00});
-    return result;
+    console.log(nullMeridian)
+    promises.push(fetch(`https://earth-lat-1200.azurewebsites.net/api/GetLandingStation`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-functions-key': FUNCTIONS_KEY,
+            'longitude': nullMeridian
+        }
+    }).then(res => res.json()).then(res => {
+        activeStation = res.result.value
+    }))
 }
-
-document.addEventListener("DOMContentLoaded", function () {
-    getStations().then(() => {
-        let gData = getMarkerData(stations);
-
-        let onInit = true;
-        let lng = 0;
-        let zoom = {altitude: 2.5};
-        globe = Globe()
-            .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-            .backgroundImageUrl('//unpkg.com/three-globe/example/img/night-sky.png')
-            .width(calcWidth())
-            .height(window.innerHeight)
-            .showAtmosphere(true)
-            .htmlElementsData(gData)
-            .htmlElement(d => {
-                const el = document.createElement('img');
-                if (d.stationId === activeStation.stationId) {
-                    el.src = './resources/marker_red.svg';
-                    el.style.opacity = 0.8;
-                } else {
-                    el.src = './resources/marker_white.svg';
-                    el.style.opacity = 0.5;
-                }
-                el.style.width = `${d.size}px`;
-                el.id = d.stationId;
-                el.className = "stationIcon"
-                el.style['pointer-events'] = 'auto';
-                el.style.cursor = 'pointer';
-                el.onclick = () => {
-                    activeStation = stations[d.id];
-                    loadImage();
-                    const stationIcons = document.getElementsByClassName("stationIcon");
-                    for (let stationIcon of stationIcons) {
-                        stationIcon.src = './resources/marker_white.svg';
-                        stationIcon.style.opacity = 0.5;
-                    }
-                    el.src = './resources/marker_red.svg';
-                    el.style.opacity = 0.8;
-                };
-                return el;
-            })
-            (document.getElementById('globe'))
-        activeStation = getClosestStation();
-        loadImage();
-        globe.onZoom(v => {
-            zoom = v;
-        })
-
-        function refresh() {
-            lng = calcNoonMeridian();
-
-            const arcsData = [
-                {
-                    startLat: 0,
-                    startLng: lng,
-                    endLat: 90,
-                    endLng: lng,
-                    color: "#d09f0c"
-                },
-                {
-                    startLat: 0,
-                    startLng: lng,
-                    endLat: -90,
-                    endLng: lng,
-                    color: "#d09f0c"
-                }
-            ];
-
-            globe
-                .arcsData(arcsData)
-                .arcColor('color')
-                .arcAltitude(0)
-                .arcStroke(1)
-                .arcDashGap(0)
-            setTimeout(refresh, 5000);
-        }
-
-        refresh();
-
-        if (onInit) {
-            globe.pointOfView({lat: 0, lng: lng + 10, altitude: zoom.altitude}, 1000)
-            onInit = false;
-        }
-
-        setGlobePOV();
-    });
-})
 
 function calcNoonMeridian() {
     var nowUtc = moment().utc();
