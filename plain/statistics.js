@@ -1,4 +1,5 @@
 const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
+const BASE_API_URL = "https://earth-lat-1200.azurewebsites.net/api/"
 const HOUR_CONVERTER = 3600
 const MILLIS_CONVERTER = 1000
 const DEFAULT_FONT_COLOR = '#ffffff'
@@ -11,26 +12,22 @@ const START_STATION = '*'
 const LINE_CHART_START = 0
 const NORMAL_LINE_CHART_END = 100
 const BRIGHTNESS_LINE_CHART_END = 5000000
+const BAR_CHART_TYPE = "bar"
+const LINE_CHART_TYPE = "line"
 
 let stationNames = new Set(START_STATION)
 let currentStationName
 let referenceDate
 let chartColors = []
-let sendTimesChart
-let sendTimesDataPoints = []
-let temperatureChart
-let temperatureDataPoints = []
-let imagesPerHourChart
-let imagesPerHourDataPoints = []
-let brightnessChart
-let brightnessDataPoints = []
 let promises = []
+let statisticInfo = []
 
 $(document).ready(function () {
     configureChartJSDefaults()
     loadCurrentDateIntoDatePicker()
     $('#stationNames').invisible()
     currentStationName = START_STATION
+    initStatisticInfo()
     loadStatistics()
 })
 
@@ -57,9 +54,16 @@ function loadCurrentDateIntoDatePicker() {
     };
 }(jQuery));
 
+function initStatisticInfo() {
+    statisticInfo.push(new StatisticInfo("SendTimes", "sendTimeChart", BAR_CHART_TYPE))
+    statisticInfo.push(new StatisticInfo("TemperatureValues", "temperatureChart", LINE_CHART_TYPE))
+    statisticInfo.push(new StatisticInfo("ImagesPerHour", "imagesPerHourChart", LINE_CHART_TYPE))
+    statisticInfo.push(new StatisticInfo("BrightnessValues", "brightnessChart", LINE_CHART_TYPE))
+}
+
 function loadStatistics() {
     loadDatePickerValue()
-    fetchStatistics()
+    fetchStatistics(createChart, false, true)
     waitForPromises()
 }
 
@@ -67,16 +71,12 @@ function loadDatePickerValue() {
     referenceDate = new Date($('#datePicker')[0].value)
 }
 
-function fetchStatistics() {
-    fetchSendTimes()
-    fetchTemperatureValues()
-    fetchImagesPerHour()
-    fetchBrightnessValues()
+function fetchStatistics(fun, invokeCallback, addToPromises) {
+    statisticInfo.forEach(s => {
+        get(s, fun, invokeCallback, addToPromises)
+    })
 }
 
-function fetchSendTimes() {
-    get("https://earth-lat-1200.azurewebsites.net/api/SendTimes", getHeaders(), createSendTimesChart)
-}
 
 function getHeaders() {
     const headers = {
@@ -89,37 +89,47 @@ function getHeaders() {
     return headers
 }
 
-function get(url, headers, fun) {
-    promises.push(fetch(url, {
+function get(statisticInfo, fun, invokeCallback, addToPromises) {
+    let request = fetch(BASE_API_URL + statisticInfo.url, {
         method: 'GET',
-        headers: headers,
+        headers: getHeaders(),
     }).then(response => {
         if (!response.ok) {
-            logout()
+            console.log('not ok')
+            // logout()
         }
         return response.json()
     }).then(data => {
         if (Math.floor(data.result.statusCode / 100) !== 2) {
-            logout()
+            console.log('not 200')
+            //logout()
         }
-        fun(data)
-    }).catch(_ => logout()))
+        fun(statisticInfo, data, invokeCallback)
+    }).catch(e => console.log(e))
+
+    if (addToPromises) {
+        promises.push(request)
+    }
 }
 
 function logout() {
     localStorage.removeItem('token')
-    window.location = "https://www.earthlat1200.org/mauseloch.html"
+    window.location = "http://localhost:63342/el-frontend/plain/mauseloch.html"
 }
 
-function createSendTimesChart(sendTimes) {
-    if (sendTimes === undefined) {
-        sendTimesDataPoints = []
-    } else {
-        sendTimesDataPoints = sendTimes.result.value
+function createChart(statisticInfo, data) {
+    generateRequiredChartColors(data.result.value.length)
+    switch (statisticInfo.chartType) {
+        case BAR_CHART_TYPE:
+            statisticInfo.chart = createBarChart(data.result.value, statisticInfo.canvasName, "Broadcast times")//TODO this title should be dynamically parsed by the backend
+            break
+        case LINE_CHART_TYPE:
+            statisticInfo.chart = createLineChart(data.result.value, statisticInfo.canvasName, "Line chart", "", 0, 100)//TODO same here
+            break
+        default:
+            break
     }
-    addStations(sendTimesDataPoints)
-    generateRequiredChartColors()
-    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Broadcast times")
+    addStations(data.result.value)
 }
 
 function addStations(dataPoints) {
@@ -130,57 +140,10 @@ function addStations(dataPoints) {
     })
 }
 
-function generateRequiredChartColors() {
-    const maxNumberOfStations = Math.max(sendTimesDataPoints.length, temperatureDataPoints.length, imagesPerHourDataPoints.length, brightnessDataPoints.length)
-    for (let i = chartColors.length; i < maxNumberOfStations; i++) {
+function generateRequiredChartColors(dataLength) {
+    for (let i = chartColors.length; i < dataLength; i++) {
         chartColors.push(randomRGBColor())
     }
-}
-
-function fetchTemperatureValues() {
-    get("https://earth-lat-1200.azurewebsites.net/api/TemperatureValues", getHeaders(), createTemperaturesChart)
-}
-
-function createTemperaturesChart(temperatureValues) {
-    if (temperatureValues === undefined) {
-        temperatureDataPoints = []
-    } else {
-        temperatureDataPoints = temperatureValues.result.value
-    }
-    addStations(temperatureDataPoints)
-    generateRequiredChartColors()
-    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°", LINE_CHART_START, NORMAL_LINE_CHART_END)
-}
-
-
-function fetchImagesPerHour() {
-    get("https://earth-lat-1200.azurewebsites.net/api/ImagesPerHour", getHeaders(), createImagesPerHourChart)
-}
-
-function createImagesPerHourChart(imagesPerHour) {
-    if (imagesPerHour === undefined) {
-        imagesPerHourDataPoints = []
-    } else {
-        imagesPerHourDataPoints = imagesPerHour.result.value
-    }
-    addStations(imagesPerHourDataPoints)
-    generateRequiredChartColors()
-    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour", LINE_CHART_START, NORMAL_LINE_CHART_END)
-}
-
-function fetchBrightnessValues() {
-    get("https://earth-lat-1200.azurewebsites.net/api/BrightnessValues", getHeaders(), createBrightnessChart)
-}
-
-function createBrightnessChart(brightnessValues) {
-    if (brightnessValues === undefined) {
-        brightnessDataPoints = []
-    } else {
-        brightnessDataPoints = brightnessValues.result.value
-    }
-    addStations(brightnessDataPoints)
-    generateRequiredChartColors()
-    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness", LINE_CHART_START, BRIGHTNESS_LINE_CHART_END)
 }
 
 function waitForPromises() {
@@ -189,6 +152,7 @@ function waitForPromises() {
             alert('Some statistics could not be loaded')
         }
         loadStationNames()
+        fetchStatistics(update, true, false)
         promises = []
     })
 }
@@ -207,43 +171,78 @@ function loadStationNames() {
 }
 
 
-function drawCharts() {
-    sendTimesChart = createBarChart(sendTimesDataPoints, "sendTimeChart", "Broadcast times")
-    temperatureChart = createLineChart(temperatureDataPoints, "temperatureChart", "Temperature course", "C°", LINE_CHART_START, NORMAL_LINE_CHART_END)
-    imagesPerHourChart = createLineChart(imagesPerHourDataPoints, "imagesPerHourChart", "Upload activity", "Images per hour", LINE_CHART_START, NORMAL_LINE_CHART_END)
-    brightnessChart = createLineChart(brightnessDataPoints, "brightnessChart", "Brightness course", "Brightness", LINE_CHART_START, BRIGHTNESS_LINE_CHART_END)
-}
-
 function onStationChanged() {
     currentStationName = $('#stationNames').val()
-    destroyCharts()
-    drawCharts()
+    fetchStatistics(update, false, false)
 }
 
+function update(statisticInfo, data, invokeCallback) {
+    switch (statisticInfo.chartType) {
+        case BAR_CHART_TYPE:
+            statisticInfo.chart.data.datasets.forEach((dataset, index) => {
+                let newStart = ((data.result.value[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
+                let newEnd = ((data.result.value[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
 
-function destroyCharts()//while this is uglier and slower than updating the chart, once the user clicks on the label and thus hides/shows the chart, this state cannot be changed programmatically
-{
-    sendTimesChart.destroy()
-    temperatureChart.destroy()
-    imagesPerHourChart.destroy()
-    brightnessChart.destroy()
+                if (newStart !== undefined && newStart != null){
+                    dataset.data[0][0]=newStart
+                }
+                if (newEnd !== undefined && newEnd != null){
+                    dataset.data[0][1]=newEnd
+                }
+            })
+            break
+        case LINE_CHART_TYPE:
+            statisticInfo.chart.data.datasets.forEach((dataset, outerIndex) => {
+                dataset.data.forEach((dataPoint, innerIndex) => {
+                    let newDataPoint = Math.round((data.result.value[outerIndex].values[innerIndex]) * 100) / 100
+
+                    if(newDataPoint !== undefined && newDataPoint != null){
+                        dataPoint.y = newDataPoint
+                    }
+                })
+            })
+            break
+        default:
+            break
+    }
+    statisticInfo.chart.update()
+    if (invokeCallback) {
+        setTimeout(function () {
+            setInterval(function () {
+                fetchStatistics(update, false, false)
+            }, 15000)
+        }, 5000)
+
+    }
+}
+
+/*
+    while this is uglier and slower than updating the chart,
+    once the user clicks on the label and thus hides/shows the chart,
+    this state cannot be changed programmatically.
+    For that reason the charts are destroyed and recreated
+*/
+function destroyCharts() {
+    statisticInfo.forEach(s => {
+        s.chart.destroy()
+    })
 }
 
 function onDateChanged() {
     stationNames = new Set(START_STATION)
     if ($('#datePicker')[0].value !== "") {
-        fetchNewStatistics()
+        fetchStatisticsForNewDate()
     } else {
         handleInvalidDate()
     }
 }
 
-function fetchNewStatistics() {
+function fetchStatisticsForNewDate() {
     referenceDate = new Date($('#datePicker')[0].value)
     destroyCharts()
     $('#stationNames').invisible()
     unloadStationNames()
-    fetchStatistics()
+    fetchStatistics(createChart, false, true)
     waitForPromises()
 }
 
@@ -256,6 +255,15 @@ function unloadStationNames() {
 function handleInvalidDate() {
     loadCurrentDateIntoDatePicker()
     if (new Date().toISOString().substring(0, 10) !== referenceDate.toISOString().substring(0, 10)) {
-        fetchNewStatistics()
+        fetchStatisticsForNewDate()
+    }
+}
+
+class StatisticInfo {
+    constructor(url, canvasName, chartType) {
+        this.url = url;
+        this.canvasName = canvasName;
+        this.chartType = chartType;
+        this.chart = {};
     }
 }
