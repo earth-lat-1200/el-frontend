@@ -15,6 +15,7 @@ const BRIGHTNESS_LINE_CHART_END = 5000000
 const BAR_CHART_TYPE = "bar"
 const LINE_CHART_TYPE = "line"
 
+let invoke = true
 let stationNames = new Set(START_STATION)
 let currentStationName
 let referenceDate
@@ -63,7 +64,7 @@ function initStatisticInfo() {
 
 function loadStatistics() {
     loadDatePickerValue()
-    fetchStatistics(createChart, false, true)
+    fetchStatistics(createChart, true)
     waitForPromises()
 }
 
@@ -71,9 +72,9 @@ function loadDatePickerValue() {
     referenceDate = new Date($('#datePicker')[0].value)
 }
 
-function fetchStatistics(fun, invokeCallback, addToPromises) {
+function fetchStatistics(fun, addToPromises, updateHidden) {
     statisticInfo.forEach(s => {
-        get(s, fun, invokeCallback, addToPromises)
+        get(s, fun, addToPromises, updateHidden)
     })
 }
 
@@ -89,8 +90,8 @@ function getHeaders() {
     return headers
 }
 
-function get(statisticInfo, fun, invokeCallback, addToPromises) {
-    let request = fetch(BASE_API_URL + statisticInfo.url, {
+function get(statisticInfo, fun, addToPromises, updateHidden) {
+    promises.push(fetch(BASE_API_URL + statisticInfo.url, {
         method: 'GET',
         headers: getHeaders(),
     }).then(response => {
@@ -104,12 +105,13 @@ function get(statisticInfo, fun, invokeCallback, addToPromises) {
             console.log('not 200')
             //logout()
         }
-        fun(statisticInfo, data, invokeCallback)
-    }).catch(e => console.log(e))
-
-    if (addToPromises) {
-        promises.push(request)
-    }
+        fun(statisticInfo, data, updateHidden)
+    }).catch(e => console.log(e)
+    ).finally(_ => {
+        if (!addToPromises) {
+            promises.pop()
+        }
+    }))
 }
 
 function logout() {
@@ -119,17 +121,17 @@ function logout() {
 
 function createChart(statisticInfo, data) {
     generateRequiredChartColors(data.result.value.length)
+    addStations(data.result.value)
     switch (statisticInfo.chartType) {
         case BAR_CHART_TYPE:
-            statisticInfo.chart = createBarChart(data.result.value, statisticInfo.canvasName, "Broadcast times")//TODO this title should be dynamically parsed by the backend
+            statisticInfo.chart = createBarChart(data.result.value, statisticInfo.canvasName, "Broadcast times")//TODO title should be dynamically parsed by the backend
             break
         case LINE_CHART_TYPE:
-            statisticInfo.chart = createLineChart(data.result.value, statisticInfo.canvasName, "Line chart", "", 0, 100)//TODO same here
+            statisticInfo.chart = createLineChart(data.result.value, statisticInfo.canvasName, "Line chart", "", 0, 100)//TODO same here + desc and y-Axis boundaries
             break
         default:
             break
     }
-    addStations(data.result.value)
 }
 
 function addStations(dataPoints) {
@@ -152,8 +154,10 @@ function waitForPromises() {
             alert('Some statistics could not be loaded')
         }
         loadStationNames()
-        fetchStatistics(update, true, false)
         promises = []
+        setTimeout(function () {
+            fetchStatistics(updateChart, false)
+        }, 5000)
     })
 }
 
@@ -170,33 +174,38 @@ function loadStationNames() {
     }
 }
 
-
 function onStationChanged() {
     currentStationName = $('#stationNames').val()
-    fetchStatistics(update, false, false)
+    fetchStatistics(updateChart, false, true)
 }
 
-function update(statisticInfo, data, invokeCallback) {
+function updateChart(statisticInfo, data, updateHidden) {
     switch (statisticInfo.chartType) {
         case BAR_CHART_TYPE:
             statisticInfo.chart.data.datasets.forEach((dataset, index) => {
-                let newStart = ((data.result.value[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
-                let newEnd = ((data.result.value[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
-
-                if (newStart !== undefined && newStart != null){
-                    dataset.data[0][0]=newStart
+                if (updateHidden) {
+                    let meta = statisticInfo.chart.getDatasetMeta(index)
+                    meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
                 }
-                if (newEnd !== undefined && newEnd != null){
-                    dataset.data[0][1]=newEnd
+                const newStart = ((data.result.value[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
+                const newEnd = ((data.result.value[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
+                if (newStart !== undefined && newStart != null) {
+                    dataset.data[0][0] = newStart
+                }
+                if (newEnd !== undefined && newEnd != null) {
+                    dataset.data[0][1] = newEnd
                 }
             })
             break
         case LINE_CHART_TYPE:
             statisticInfo.chart.data.datasets.forEach((dataset, outerIndex) => {
+                if (updateHidden) {
+                    let meta = statisticInfo.chart.getDatasetMeta(outerIndex)
+                    meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
+                }
                 dataset.data.forEach((dataPoint, innerIndex) => {
-                    let newDataPoint = Math.round((data.result.value[outerIndex].values[innerIndex]) * 100) / 100
-
-                    if(newDataPoint !== undefined && newDataPoint != null){
+                    const newDataPoint = Math.round((data.result.value[outerIndex].values[innerIndex]) * 100) / 100
+                    if (newDataPoint !== undefined && newDataPoint != null) {
                         dataPoint.y = newDataPoint
                     }
                 })
@@ -206,26 +215,13 @@ function update(statisticInfo, data, invokeCallback) {
             break
     }
     statisticInfo.chart.update()
-    if (invokeCallback) {
-        setTimeout(function () {
-            setInterval(function () {
-                fetchStatistics(update, false, false)
-            }, 15000)
+
+    if (invoke) {
+        invoke = false
+        setInterval(function () {
+            fetchStatistics(updateChart, false)
         }, 5000)
-
     }
-}
-
-/*
-    while this is uglier and slower than updating the chart,
-    once the user clicks on the label and thus hides/shows the chart,
-    this state cannot be changed programmatically.
-    For that reason the charts are destroyed and recreated
-*/
-function destroyCharts() {
-    statisticInfo.forEach(s => {
-        s.chart.destroy()
-    })
 }
 
 function onDateChanged() {
@@ -242,8 +238,20 @@ function fetchStatisticsForNewDate() {
     destroyCharts()
     $('#stationNames').invisible()
     unloadStationNames()
-    fetchStatistics(createChart, false, true)
+    fetchStatistics(createChart, true)
     waitForPromises()
+}
+
+/*
+    while this is uglier and slower than updating the chart,
+    once the user clicks on the label and thus hides/shows the chart,
+    this state cannot be changed programmatically.
+    For that reason the charts are destroyed and recreated.
+*/
+function destroyCharts() {
+    statisticInfo.forEach(s => {
+        s.chart.destroy()
+    })
 }
 
 function unloadStationNames() {
