@@ -54,7 +54,7 @@ function loadCurrentDateIntoDatePicker() {
 }(jQuery));
 
 function initStatisticInfo() {
-    statisticInfo.push(new StatisticInfo("SendTimes", "sendTimeChart"))
+    statisticInfo.push(new StatisticInfo("BroadcastTimes", "sendTimeChart"))
     statisticInfo.push(new StatisticInfo("TemperatureValues", "temperatureChart"))
     statisticInfo.push(new StatisticInfo("ImagesPerHour", "imagesPerHourChart"))
     statisticInfo.push(new StatisticInfo("BrightnessValues", "brightnessChart"))
