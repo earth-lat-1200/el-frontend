@@ -9,9 +9,7 @@ const FONT_SIZE = 14
 const FONT_SIZE_TITLE = 28
 const FONT_SIZE_LABEL = 20
 const START_STATION = '*'
-const LINE_CHART_START = 0
 const NORMAL_LINE_CHART_END = 100
-const BRIGHTNESS_LINE_CHART_END = 5000000
 const BAR_CHART_TYPE = "bar"
 const LINE_CHART_TYPE = "line"
 
@@ -56,10 +54,10 @@ function loadCurrentDateIntoDatePicker() {
 }(jQuery));
 
 function initStatisticInfo() {
-    statisticInfo.push(new StatisticInfo("SendTimes", "sendTimeChart", BAR_CHART_TYPE))
-    statisticInfo.push(new StatisticInfo("TemperatureValues", "temperatureChart", LINE_CHART_TYPE))
-    statisticInfo.push(new StatisticInfo("ImagesPerHour", "imagesPerHourChart", LINE_CHART_TYPE))
-    statisticInfo.push(new StatisticInfo("BrightnessValues", "brightnessChart", LINE_CHART_TYPE))
+    statisticInfo.push(new StatisticInfo("SendTimes", "sendTimeChart"))
+    statisticInfo.push(new StatisticInfo("TemperatureValues", "temperatureChart"))
+    statisticInfo.push(new StatisticInfo("ImagesPerHour", "imagesPerHourChart"))
+    statisticInfo.push(new StatisticInfo("BrightnessValues", "brightnessChart"))
 }
 
 function loadStatistics() {
@@ -96,17 +94,15 @@ function get(statisticInfo, fun, addToPromises, updateHidden) {
         headers: getHeaders(),
     }).then(response => {
         if (!response.ok) {
-            console.log('not ok')
-            // logout()
+            logout()
         }
         return response.json()
     }).then(data => {
         if (Math.floor(data.result.statusCode / 100) !== 2) {
-            console.log('not 200')
-            //logout()
+            logout()
         }
         fun(statisticInfo, data, updateHidden)
-    }).catch(e => console.log(e)
+    }).catch(_ => logout()
     ).finally(_ => {
         if (!addToPromises) {
             promises.pop()
@@ -116,18 +112,18 @@ function get(statisticInfo, fun, addToPromises, updateHidden) {
 
 function logout() {
     localStorage.removeItem('token')
-    window.location = "http://localhost:63342/el-frontend/plain/mauseloch.html"
+    window.location = "https://www.earthlat1200.org/mauseloch.html"
 }
 
 function createChart(statisticInfo, data) {
-    generateRequiredChartColors(data.result.value.length)
-    addStations(data.result.value)
-    switch (statisticInfo.chartType) {
+    generateRequiredChartColors(data.result.value.datasets.length)
+    addStations(data.result.value.datasets)
+    switch (data.result.value.chartType) {
         case BAR_CHART_TYPE:
-            statisticInfo.chart = createBarChart(data.result.value, statisticInfo.canvasName, "Broadcast times")//TODO title should be dynamically parsed by the backend
+            statisticInfo.chart = createBarChart(data.result.value.datasets, statisticInfo.canvasName, data.result.value.chartTitle)
             break
         case LINE_CHART_TYPE:
-            statisticInfo.chart = createLineChart(data.result.value, statisticInfo.canvasName, "Line chart", "", 0, 100)//TODO same here + desc and y-Axis boundaries
+            statisticInfo.chart = createLineChart(data.result.value.datasets, statisticInfo.canvasName, data.result.value.chartTitle, data.result.value.description, data.result.value.min, data.result.value.max)
             break
         default:
             break
@@ -180,15 +176,15 @@ function onStationChanged() {
 }
 
 function updateChart(statisticInfo, data, updateHidden) {
-    switch (statisticInfo.chartType) {
+    switch (data.result.value.chartType) {
         case BAR_CHART_TYPE:
             statisticInfo.chart.data.datasets.forEach((dataset, index) => {
                 if (updateHidden) {
                     let meta = statisticInfo.chart.getDatasetMeta(index)
                     meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
                 }
-                const newStart = ((data.result.value[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
-                const newEnd = ((data.result.value[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
+                const newStart = ((data.result.value.datasets[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
+                const newEnd = ((data.result.value.datasets[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
                 if (newStart !== undefined && newStart != null) {
                     dataset.data[0][0] = newStart
                 }
@@ -204,7 +200,7 @@ function updateChart(statisticInfo, data, updateHidden) {
                     meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
                 }
                 dataset.data.forEach((dataPoint, innerIndex) => {
-                    const newDataPoint = Math.round((data.result.value[outerIndex].values[innerIndex]) * 100) / 100
+                    const newDataPoint = Math.round((data.result.value.datasets[outerIndex].values[innerIndex]) * 100) / 100
                     if (newDataPoint !== undefined && newDataPoint != null) {
                         dataPoint.y = newDataPoint
                     }
@@ -233,7 +229,7 @@ function onDateChanged() {
     }
 }
 
-function fetchStatisticsForNewDate() {
+function fetchStatisticsForNewDate() {//TODO maybe redrawing isn't necessary here, update may be enough
     referenceDate = new Date($('#datePicker')[0].value)
     destroyCharts()
     $('#stationNames').invisible()
@@ -268,10 +264,9 @@ function handleInvalidDate() {
 }
 
 class StatisticInfo {
-    constructor(url, canvasName, chartType) {
+    constructor(url, canvasName) {
         this.url = url;
         this.canvasName = canvasName;
-        this.chartType = chartType;
         this.chart = {};
     }
 }
