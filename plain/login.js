@@ -5,7 +5,7 @@ function login() {
     const username = $('#username-field')[0].value
     const password = $('#password-field')[0].value
 
-    fetch(BASE_API_URL + "Authenticate", {
+    fetch("https://earth-lat-1200.azurewebsites.net/api/Authenticate", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
