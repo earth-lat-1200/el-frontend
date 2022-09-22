@@ -8,7 +8,6 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
 
     const data = {
         datasets: dataPoints.map((item, index) => {
-
             const hideDataset = (item.name !== currentStationName) && (currentStationName !== '*')
             const color = chartColors[index];
             return {
