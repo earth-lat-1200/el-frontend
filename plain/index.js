@@ -20,10 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
             lng = calcNoonMeridian()
             let arcData = getArcData()
             drawArcOnGlobe(arcData)
-            setTimeout(refresh, 5000);
         }
 
-        refresh();
+        setInterval(refresh, 5000)
         setGlobePOV();
     })
 })
