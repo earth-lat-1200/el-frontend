@@ -22,12 +22,15 @@ body {
     align-items: center;
     z-index: 100;
 }
+
 .earthLatLogo {
     transition: 0.5s;
 }
+
 .landingLinks {
     transition: 0.5s;
 }
+
 .container {
     transition: 0.5s;
 }
@@ -39,6 +42,7 @@ body {
 .navbar > * {
     filter: drop-shadow(1px 1px 2px black);
 }
+
 .transparent {
     opacity: 0.5;
 }
@@ -129,6 +133,24 @@ h2 {
     background-color: white;
 }
 
+footer {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+}
+
+footer a {
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    margin-left: 5px;
+}
+
+footer img {
+    height: inherit;
+    width: inherit;
+}
+
 @media (orientation: landscape) {
 }
 
@@ -141,7 +163,7 @@ h2 {
         bottom: 0 !important;
         max-width: 100% !important;
         width: 100%;
-        max-height: 50vh!important;
+        max-height: 50vh !important;
         display: block;
     }
 
@@ -163,12 +185,11 @@ h2 {
 }
 
 
-
 @media only screen and (max-width: 580px) {
 
     #station {
         margin: auto;
-        max-width: 90%!important;
+        max-width: 90% !important;
         left: unset !important;
         bottom: unset !important;
         top: unset !important;
@@ -184,6 +205,7 @@ h2 {
         bottom: unset !important;
         top: unset !important;
     }
+
     .hamburger {
         z-index: 2;
         display: block;
@@ -263,7 +285,7 @@ h2 {
     top: 50%;
     bottom: auto;
     max-width: 40%;
-    max-height: 50vh!important;
+    max-height: 50vh !important;
     display: block;
 }
 
@@ -576,7 +598,7 @@ section {
 
 button h3 {
     display: inline;
-    font-family: 'MetropolisLight';    
+    font-family: 'MetropolisLight';
     font-weight: 500;
     font-size: 20px;
     line-height: 1.4;
@@ -597,47 +619,47 @@ button h3 {
     width: 100%;
     border-bottom-style: solid;
     border-width: 0.01px;
-  }
+}
 
 @media (hover: hover) {
     .accordion:hover {
-        background-color: rgba(255,255,255,0.2);
+        background-color: rgba(255, 255, 255, 0.2);
     }
 }
-  
-  .accordion:after {
+
+.accordion:after {
     content: '\002B';
     font-weight: bold;
     float: right;
     margin-left: 5px;
     font-size: 20px;
     padding-top: 2px;
-  }
-  
-  .active:after {
+}
+
+.active:after {
     font-size: 20px;
     content: "\2212";
-  }
-  
-  .panel {
+}
+
+.panel {
     text-align: left;
     padding-left: 25px;
     padding-right: 25px;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-  }
+}
 
-  .panel p {      
+.panel p {
     color: #fff;
     font-size: 15px;
     line-height: 1.5em;
     padding-top: 1em;
-  }
+}
 
-  .panel p:last-child {
+.panel p:last-child {
     padding-bottom: 1em;
-  } 
+}
 
 .icon {
     color: white;
@@ -704,12 +726,12 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: rgba(255,255,255,0.15);
+    background-color: rgba(255, 255, 255, 0.15);
     border-radius: 20px;
     border: 6px solid transparent;
     background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(255,255,255,0.3);
+    background-color: rgba(255, 255, 255, 0.3);
 }

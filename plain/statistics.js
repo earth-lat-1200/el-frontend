@@ -76,16 +76,35 @@ function fetchStatistics(fun, addToPromises, updateHidden) {
     })
 }
 
-
-function getHeaders() {
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'referenceDate': `${getFormattedDate(referenceDate, false)}`,
-        'timezoneOffset': `${getTimezoneOffset()}`,
-        'x-functions-key': `${FUNCTIONS_KEY}`
+function createChart(statisticInfo, data) {
+    generateRequiredChartColors(data.result.value.datasets.length)
+    addStations(data.result.value.datasets)
+    switch (data.result.value.chartType) {
+        case BAR_CHART_TYPE:
+            statisticInfo.chart = createBarChart(data.result.value.datasets, statisticInfo.canvasName, data.result.value.chartTitle)
+            statisticInfo.chartType = BAR_CHART_TYPE
+            break
+        case LINE_CHART_TYPE:
+            statisticInfo.chart = createLineChart(data.result.value.datasets, statisticInfo.canvasName, data.result.value.chartTitle, data.result.value.description, data.result.value.min, data.result.value.max)
+            statisticInfo.chartType = LINE_CHART_TYPE
+            break
+        default:
+            break
     }
-    return headers
+}
+
+function generateRequiredChartColors(dataLength) {
+    for (let i = chartColors.length; i < dataLength; i++) {
+        chartColors.push(randomRGBColor())
+    }
+}
+
+function addStations(dataPoints) {
+    if (dataPoints === undefined)
+        return
+    dataPoints.map(x => x.name).forEach(x => {
+        stationNames.add(x)
+    })
 }
 
 function get(statisticInfo, fun, addToPromises, updateHidden) {
@@ -110,38 +129,20 @@ function get(statisticInfo, fun, addToPromises, updateHidden) {
     }))
 }
 
+function getHeaders() {
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'referenceDate': `${getFormattedDate(referenceDate, false)}`,
+        'timezoneOffset': `${getTimezoneOffset()}`,
+        'x-functions-key': `${FUNCTIONS_KEY}`
+    }
+    return headers
+}
+
 function logout() {
     localStorage.removeItem('token')
     window.location = "https://www.earthlat1200.org/mauseloch.html"
-}
-
-function createChart(statisticInfo, data) {
-    generateRequiredChartColors(data.result.value.datasets.length)
-    addStations(data.result.value.datasets)
-    switch (data.result.value.chartType) {
-        case BAR_CHART_TYPE:
-            statisticInfo.chart = createBarChart(data.result.value.datasets, statisticInfo.canvasName, data.result.value.chartTitle)
-            break
-        case LINE_CHART_TYPE:
-            statisticInfo.chart = createLineChart(data.result.value.datasets, statisticInfo.canvasName, data.result.value.chartTitle, data.result.value.description, data.result.value.min, data.result.value.max)
-            break
-        default:
-            break
-    }
-}
-
-function addStations(dataPoints) {
-    if (dataPoints === undefined)
-        return
-    dataPoints.map(x => x.name).forEach(x => {
-        stationNames.add(x)
-    })
-}
-
-function generateRequiredChartColors(dataLength) {
-    for (let i = chartColors.length; i < dataLength; i++) {
-        chartColors.push(randomRGBColor())
-    }
 }
 
 function waitForPromises() {
@@ -164,52 +165,48 @@ function loadStationNames() {
             value: x
         }))
     })
+    if (!stationNames.has(currentStationName)) {
+        currentStationName = START_STATION
+        updateStatisticInfoVisibility()
+    }
     $('#stationNames').val(currentStationName)
     if ($('#stationNames option').length > 2) {
         $("#stationNames").visible();
     }
 }
 
-function onStationChanged() {
-    currentStationName = $('#stationNames').val()
-    fetchStatistics(updateChart, false, true)
+function updateStatisticInfoVisibility() {
+    statisticInfo.forEach(s => {
+        updateChart(s, undefined, true)
+    })
 }
 
 function updateChart(statisticInfo, data, updateHidden) {
-    switch (data.result.value.chartType) {
+    switch (statisticInfo.chartType) {
         case BAR_CHART_TYPE:
             statisticInfo.chart.data.datasets.forEach((dataset, index) => {
                 if (updateHidden) {
-                    let meta = statisticInfo.chart.getDatasetMeta(index)
-                    meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
+                    updateDatasetVisibility(statisticInfo, index, dataset)
                 }
-                const newStart = ((data.result.value.datasets[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
-                const newEnd = ((data.result.value.datasets[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
-                if (newStart !== undefined && newStart != null) {
-                    dataset.data[0][0] = newStart
-                }
-                if (newEnd !== undefined && newEnd != null) {
-                    dataset.data[0][1] = newEnd
+                if (data !== undefined) {
+                    updateBarChartDataset(data, index, dataset)
                 }
             })
             break
         case LINE_CHART_TYPE:
             statisticInfo.chart.data.datasets.forEach((dataset, outerIndex) => {
                 if (updateHidden) {
-                    let meta = statisticInfo.chart.getDatasetMeta(outerIndex)
-                    meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
+                    updateDatasetVisibility(statisticInfo, outerIndex, dataset)
                 }
-                dataset.data.forEach((dataPoint, innerIndex) => {
-                    const newDataPoint = Math.round((data.result.value.datasets[outerIndex].values[innerIndex]) * 100) / 100
-                    if (newDataPoint !== undefined && newDataPoint != null) {
-                        dataPoint.y = newDataPoint
-                    }
-                })
+                if (data !== undefined) {
+                    updateLineChartDataset(data, outerIndex, dataset)
+                }
             })
             break
         default:
             break
     }
+
     statisticInfo.chart.update()
 
     if (invoke) {
@@ -218,6 +215,36 @@ function updateChart(statisticInfo, data, updateHidden) {
             fetchStatistics(updateChart, false)
         }, 5000)
     }
+}
+
+function updateDatasetVisibility(statisticInfo, index, dataset) {
+    let meta = statisticInfo.chart.getDatasetMeta(index)
+    meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
+}
+
+function updateBarChartDataset(data, index, dataset) {
+    const newStart = ((data.result.value.datasets[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
+    const newEnd = ((data.result.value.datasets[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
+    if (newStart !== undefined && newStart != null) {
+        dataset.data[0][0] = newStart
+    }
+    if (newEnd !== undefined && newEnd != null) {
+        dataset.data[0][1] = newEnd
+    }
+}
+
+function updateLineChartDataset(data, outerIndex, dataset) {
+    dataset.data.forEach((dataPoint, innerIndex) => {
+        const newDataPoint = Math.round((data.result.value.datasets[outerIndex].values[innerIndex]) * 100) / 100
+        if (newDataPoint !== undefined && newDataPoint != null) {
+            dataPoint.y = newDataPoint
+        }
+    })
+}
+
+function onStationChanged() {
+    currentStationName = $('#stationNames').val()
+    updateStatisticInfoVisibility()
 }
 
 function onDateChanged() {
@@ -229,7 +256,7 @@ function onDateChanged() {
     }
 }
 
-function fetchStatisticsForNewDate() {//TODO maybe redrawing isn't necessary here, update may be enough
+function fetchStatisticsForNewDate() {
     referenceDate = new Date($('#datePicker')[0].value)
     destroyCharts()
     $('#stationNames').invisible()
@@ -238,12 +265,7 @@ function fetchStatisticsForNewDate() {//TODO maybe redrawing isn't necessary her
     waitForPromises()
 }
 
-/*
-    while this is uglier and slower than updating the chart,
-    once the user clicks on the label and thus hides/shows the chart,
-    this state cannot be changed programmatically.
-    For that reason the charts are destroyed and recreated.
-*/
+//redrawing the charts for different dates is easier than checking for and adding/removing new/existing stations
 function destroyCharts() {
     statisticInfo.forEach(s => {
         s.chart.destroy()
@@ -268,5 +290,6 @@ class StatisticInfo {
         this.url = url;
         this.canvasName = canvasName;
         this.chart = {};
+        this.chartType = ''
     }
 }
