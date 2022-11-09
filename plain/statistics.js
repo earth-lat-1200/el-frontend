@@ -1,7 +1,5 @@
 const FUNCTIONS_KEY = 'oH/GOJSarf1jT1LutARtm4aOhJWOgELdw3Nka1DkX6mDE2B6l93uuA==';
 const BASE_API_URL = "https://earth-lat-1200.azurewebsites.net/api/"
-const HOUR_CONVERTER = 3600
-const MILLIS_CONVERTER = 1000
 const DEFAULT_FONT_COLOR = '#ffffff'
 const HIGHLIGHTED_FONT_COLOR = '#99ff99'
 const FONT_FAMILY = 'Rubik'
@@ -102,7 +100,7 @@ function generateRequiredChartColors(dataLength) {
 function addStations(dataPoints) {
     if (dataPoints === undefined)
         return
-    dataPoints.map(x => x.name).forEach(x => {
+    dataPoints.map(x => x.stationName).forEach(x => {
         stationNames.add(x)
     })
 }
@@ -134,7 +132,6 @@ function getHeaders() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
         'referenceDate': `${getFormattedDate(referenceDate, false)}`,
-        'timezoneOffset': `${getTimezoneOffset()}`,
         'x-functions-key': `${FUNCTIONS_KEY}`
     }
     return headers
@@ -222,23 +219,19 @@ function updateDatasetVisibility(statisticInfo, index, dataset) {
     meta.hidden = (dataset.label !== currentStationName) && (currentStationName !== '*')
 }
 
-function updateBarChartDataset(data, index, dataset) {
-    const newStart = ((data.result.value.datasets[index].start - HOUR_CONVERTER) * MILLIS_CONVERTER)
-    const newEnd = ((data.result.value.datasets[index].end - HOUR_CONVERTER) * MILLIS_CONVERTER)
-    if (newStart !== undefined && newStart != null) {
-        dataset.data[0][0] = newStart
-    }
-    if (newEnd !== undefined && newEnd != null) {
-        dataset.data[0][1] = newEnd
-    }
+function updateBarChartDataset(data, outerIndex, dataset) {
+    const stationData = data.result.value.datasets[outerIndex]
+    stationData.values.forEach((value, innerIndex) => {
+        dataset.data[innerIndex].x = [value.start, value.end]
+    })
+    //TODO new bar chart segments are not yet detected by this
 }
 
 function updateLineChartDataset(data, outerIndex, dataset) {
-    dataset.data.forEach((dataPoint, innerIndex) => {
-        const newDataPoint = Math.round((data.result.value.datasets[outerIndex].values[innerIndex]) * 100) / 100
-        if (newDataPoint !== undefined && newDataPoint != null) {
-            dataPoint.y = newDataPoint
-        }
+    const stationData = data.result.value.datasets[outerIndex].values
+    stationData.forEach((value, innerIndex) => {
+        dataset.data[innerIndex].y = value.value
+        dataset.data[innerIndex].x = value.timestamp
     })
 }
 
