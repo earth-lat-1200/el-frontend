@@ -1,16 +1,17 @@
 function createBarChart(dataPoints, canvas, title) {
     const labels = [''];
-
     const data = {
         labels: labels,
         datasets: dataPoints.map((item, index) => {
             const hideDataset = (item.name !== currentStationName) && (currentStationName !== '*')
             const color = chartColors[index]
             return {
-                label: item.name,
-                data: labels.map(() => {
-                    return [(item.start - HOUR_CONVERTER) * MILLIS_CONVERTER,
-                        (item.end - HOUR_CONVERTER) * MILLIS_CONVERTER];
+                label: item.stationName,
+                data: item.values.map(value => {
+                    return{
+                        y:index,
+                        x:[value.start, value.end]
+                    }
                 }),
                 backgroundColor: [
                     `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`,
@@ -39,8 +40,8 @@ function createBarChart(dataPoints, canvas, title) {
                 },
                 x: {
                     ticks: tickConfig,
-                    min: formatChartDate(12 + getTimezoneOffsetHours(), 1),
-                    max: formatChartDate(12 + getTimezoneOffsetHours(), 3),
+                    min: getStartDate(),
+                    max: getEndDate(),
                     display: true,
                     title: {
                         display: true,
@@ -73,10 +74,10 @@ function createBarChart(dataPoints, canvas, title) {
                             return context[0].dataset.label
                         },
                         label: function (context) {
-                            const barData = context.dataset.data[0]
-                            const startDateTimeString = getFormattedTooltipDate(barData[0])
-                            const endDateTimeString = getFormattedTooltipDate(barData[1])
-                            return [startDateTimeString, `-${endDateTimeString}`];
+                            const barData = context.dataset.data[context.dataIndex].x
+                            const startTime = getTimeFromDate(barData[0])
+                            const endTime = getTimeFromDate(barData[1])
+                            return [startTime, `-${endTime}`];
                         }
                     }
                 },

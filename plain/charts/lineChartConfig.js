@@ -11,12 +11,11 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
             const hideDataset = (item.name !== currentStationName) && (currentStationName !== '*')
             const color = chartColors[index];
             return {
-                label: item.name,
-                data: item.values.map((dataPoint, innerIndex) => {
-                    const day = ((innerIndex / 24) | 0) + 1
+                label: item.stationName,
+                data: item.values.map((dataPoint) => {
                     return {
-                        y: Math.round((dataPoint + Number.EPSILON) * 100) / 100,
-                        x: formatChartDate(innerIndex % 24, day)
+                        y: Math.round((dataPoint.value + Number.EPSILON) * 100) / 100,
+                        x: dataPoint.timestamp
                     }
                 }),
                 borderColor: `rgb(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`,
@@ -45,11 +44,6 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
                 },
                 tooltip: {
                     callbacks: {
-                        title: function (context) {
-                            const millisecondsSinceStart = context[0].parsed.x
-                            const time = getFormattedTooltipDate(millisecondsSinceStart)
-                            return time
-                        },
                         label: function (context) {
                             const stationName = context.dataset.label
                             const yValue = context.parsed.y
@@ -64,8 +58,8 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
             scales: {
                 x: {
                     ticks: tickConfig,
-                    min: formatChartDate(12 + getTimezoneOffsetHours(), 1),
-                    max: formatChartDate(12 + getTimezoneOffsetHours(), 3),
+                    min: getStartDate(),
+                    max: getEndDate(),
                     display: true,
                     title: {
                         display: true,
