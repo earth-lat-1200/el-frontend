@@ -222,9 +222,15 @@ function updateDatasetVisibility(statisticInfo, index, dataset) {
 function updateBarChartDataset(data, outerIndex, dataset) {
     const stationData = data.result.value.datasets[outerIndex]
     stationData.values.forEach((value, innerIndex) => {
-        dataset.data[innerIndex].x = [value.start, value.end]
+        if(dataset.data[innerIndex] === undefined)
+        {
+            dataset.data.push([value.start, value.end])
+        }
+        else
+        {
+            dataset.data[innerIndex].x = [value.start, value.end]
+        }
     })
-    //TODO new bar chart segments are not yet detected by this
 }
 
 function updateLineChartDataset(data, outerIndex, dataset) {
