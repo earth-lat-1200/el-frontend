@@ -58,8 +58,8 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
             scales: {
                 x: {
                     ticks: tickConfig,
-                    min: getStartDate(),
-                    max: getEndDate(),
+                    min: getFormattedDateTime(startReferenceDate),
+                    max: getFormattedDateTime(endReferenceDate),
                     display: true,
                     title: {
                         display: true,

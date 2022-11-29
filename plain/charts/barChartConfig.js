@@ -40,8 +40,8 @@ function createBarChart(dataPoints, canvas, title) {
                 },
                 x: {
                     ticks: tickConfig,
-                    min: getStartDate(),
-                    max: getEndDate(),
+                    min: getFormattedDateTime(startReferenceDate),
+                    max: getFormattedDateTime(endReferenceDate),
                     display: true,
                     title: {
                         display: true,
@@ -75,9 +75,10 @@ function createBarChart(dataPoints, canvas, title) {
                         },
                         label: function (context) {
                             const barData = context.dataset.data[context.dataIndex].x
+                            const date = getDateFromDate(barData[0])
                             const startTime = getTimeFromDate(barData[0])
                             const endTime = getTimeFromDate(barData[1])
-                            return [startTime, `-${endTime}`];
+                            return [date, startTime, endTime];
                         }
                     }
                 },

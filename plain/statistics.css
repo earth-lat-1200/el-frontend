@@ -29,8 +29,8 @@
     vertical-align: top;
 }
 
-select {
-    margin-left: 10px;
+input {
+    margin-right: 10px;
 }
 
 #logout-button {

@@ -20,7 +20,8 @@
 <body>
     <div class="container">
         <div class="head-row">
-            <input type="date" id="datePicker" onchange="onDateChanged()" onpaste="this.onchange();">
+            <input type="date" id="startDatePicker" onchange="onStartDateChanged()" onpaste="this.onchange();">
+            <input type="date" id="endDatePicker" onchange="onEndDateChanged()" onpaste="this.onchange();">
             <select id="stationNames" onchange="onStationChanged()"></select>
             <button id="logout-button" onclick="logout()">Logout</button>
         </div>
