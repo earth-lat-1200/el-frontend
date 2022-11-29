@@ -13,7 +13,7 @@
     display: block;
 }
 
-.head-row > select, button, input {
+.head-row select, button, input {
     position: relative;
     transition: background-color 0.5s;
     box-sizing: border-box;
@@ -29,8 +29,8 @@
     vertical-align: top;
 }
 
-select {
-    margin-left: 10px;
+input {
+    margin-right: 10px;
 }
 
 #logout-button {
@@ -41,6 +41,10 @@ select {
 #logout-button:hover {
     background-color: #4fb3ff;
     transition: background-color 0.5s;
+}
+
+.row{
+    margin-bottom: 15px;
 }
 
 .row::after {
@@ -63,11 +67,21 @@ select {
     width: 90%;
 }
 
+/*this prevents a bug that causes the canvas not to rescale with the browser but internally causes the chart to flicker*/
+/*canvas*/
+/*{*/
+/*    width: 100% !important;*/
+/*    height: 100% !important;*/
+/*}*/
+
 .top{
-    margin-top: 70px;
+    margin-top: 90px;
 }
 
-@media (max-width: 545px) {
+@media (max-width: 490px) {
+    .top{
+        margin-top: 150px;
+    }
     #logout-button {
         margin-left: 15px;
         margin-top: 15px;

@@ -14,14 +14,15 @@ const LINE_CHART_TYPE = "line"
 let invoke = true
 let stationNames = new Set(START_STATION)
 let currentStationName
-let referenceDate
+let startReferenceDate
+let endReferenceDate
 let chartColors = []
 let promises = []
 let statisticInfo = []
 
 $(document).ready(function () {
     configureChartJSDefaults()
-    loadCurrentDateIntoDatePicker()
+    loadCurrentDateIntoDatePickers()
     $('#stationNames').invisible()
     currentStationName = START_STATION
     initStatisticInfo()
@@ -34,8 +35,12 @@ function configureChartJSDefaults() {
     Chart.defaults.font.size = FONT_SIZE
 }
 
-function loadCurrentDateIntoDatePicker() {
-    $('#datePicker')[0].value = new Date().toISOString().substring(0, 10)
+function loadCurrentDateIntoDatePickers() {
+    const today = new Date()
+    $('#startDatePicker')[0].value = today.toISOString().substring(0, 10)
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    $('#endDatePicker')[0].value = tomorrow.toISOString().substring(0, 10)
 }
 
 (function ($) {
@@ -65,7 +70,8 @@ function loadStatistics() {
 }
 
 function loadDatePickerValue() {
-    referenceDate = new Date($('#datePicker')[0].value)
+    startReferenceDate = new Date($('#startDatePicker')[0].value)
+    endReferenceDate = new Date($('#endDatePicker')[0].value)
 }
 
 function fetchStatistics(fun, addToPromises, updateHidden) {
@@ -131,7 +137,8 @@ function getHeaders() {
     const headers = {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        'referenceDate': `${getFormattedDate(referenceDate, false)}`,
+        'startDate': `${getFormattedDate(startReferenceDate)}`,
+        'endDate': `${getFormattedDate(endReferenceDate)}`,
         'x-functions-key': `${FUNCTIONS_KEY}`
     }
     return headers
@@ -222,15 +229,18 @@ function updateDatasetVisibility(statisticInfo, index, dataset) {
 function updateBarChartDataset(data, outerIndex, dataset) {
     const stationData = data.result.value.datasets[outerIndex]
     stationData.values.forEach((value, innerIndex) => {
-        dataset.data[innerIndex].x = [value.start, value.end]
+        if (dataset.data[innerIndex] === undefined) {
+            dataset.data.push([value.start, value.end])
+        } else {
+            dataset.data[innerIndex].x = [value.start, value.end]
+        }
     })
-    //TODO new bar chart segments are not yet detected by this
 }
 
 function updateLineChartDataset(data, outerIndex, dataset) {
     const stationData = data.result.value.datasets[outerIndex].values
     stationData.forEach((value, innerIndex) => {
-        dataset.data[innerIndex].y = value.value
+        dataset.data[innerIndex].y = Math.round((value.value + Number.EPSILON) * 100) / 100
         dataset.data[innerIndex].x = value.timestamp
     })
 }
@@ -240,17 +250,25 @@ function onStationChanged() {
     updateStatisticInfoVisibility()
 }
 
-function onDateChanged() {
+function onStartDateChanged() {
     stationNames = new Set(START_STATION)
-    if ($('#datePicker')[0].value !== "") {
+    if (datesAreValid()) {
+        loadDatePickerValue()
+        if (startReferenceDate >= endReferenceDate) {
+            endReferenceDate.setDate(startReferenceDate.getDate() + 1)
+            $('#endDatePicker')[0].value = endReferenceDate.toISOString().substring(0, 10)
+        }
         fetchStatisticsForNewDate()
     } else {
         handleInvalidDate()
     }
 }
 
+function datesAreValid() {
+    return ($('#startDatePicker')[0].value !== "" && $('#endDatePicker')[0].value !== "")
+}
+
 function fetchStatisticsForNewDate() {
-    referenceDate = new Date($('#datePicker')[0].value)
     destroyCharts()
     $('#stationNames').invisible()
     unloadStationNames()
@@ -272,9 +290,21 @@ function unloadStationNames() {
 }
 
 function handleInvalidDate() {
-    loadCurrentDateIntoDatePicker()
-    if (new Date().toISOString().substring(0, 10) !== referenceDate.toISOString().substring(0, 10)) {
+    loadCurrentDateIntoDatePickers()
+    fetchStatisticsForNewDate()
+}
+
+function onEndDateChanged() {
+    stationNames = new Set(START_STATION)
+    if (datesAreValid()) {
+        loadDatePickerValue()
+        if (endReferenceDate <= startReferenceDate) {
+            startReferenceDate.setDate(endReferenceDate.getDate() - 1)
+            $('#startDatePicker')[0].value = startReferenceDate.toISOString().substring(0, 10)
+        }
         fetchStatisticsForNewDate()
+    } else {
+        handleInvalidDate()
     }
 }
 

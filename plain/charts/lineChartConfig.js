@@ -8,7 +8,7 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
 
     const data = {
         datasets: dataPoints.map((item, index) => {
-            const hideDataset = (item.name !== currentStationName) && (currentStationName !== '*')
+            const hideDataset = (item.stationName !== currentStationName) && (currentStationName !== '*')
             const color = chartColors[index];
             return {
                 label: item.stationName,
@@ -34,6 +34,7 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
         data: data,
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
                 title: {
                     display: true,
@@ -58,8 +59,8 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
             scales: {
                 x: {
                     ticks: tickConfig,
-                    min: getStartDate(),
-                    max: getEndDate(),
+                    min: getFormattedDateTime(startReferenceDate),
+                    max: getFormattedDateTime(endReferenceDate),
                     display: true,
                     title: {
                         display: true,
