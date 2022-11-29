@@ -34,6 +34,7 @@ function createLineChart(dataPoints, canvas, title, description, min, max) {
         data: data,
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
                 title: {
                     display: true,

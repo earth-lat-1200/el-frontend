@@ -30,6 +30,8 @@ function createBarChart(dataPoints, canvas, title) {
         type: 'bar',
         data: data,
         options: {
+            responsive: true,
+            maintainAspectRatio: true,
             indexAxis: 'y',
             scales: {
                 y: {
@@ -59,7 +61,6 @@ function createBarChart(dataPoints, canvas, title) {
                     }
                 },
             },
-            responsive: true,
             plugins: {
                 title: {
                     display: true,

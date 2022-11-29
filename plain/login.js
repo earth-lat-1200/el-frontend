@@ -31,5 +31,5 @@ function login() {
 
 function forward(data) {
     localStorage.setItem('token', data.result.value)
-    window.location = "http://localhost:63342/el-frontend/plain/statistics.html";
+    window.location = "https://www.earthlat1200.org/statistics.html";
 }

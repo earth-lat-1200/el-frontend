@@ -117,15 +117,15 @@ function get(statisticInfo, fun, addToPromises, updateHidden) {
         headers: getHeaders(),
     }).then(response => {
         if (!response.ok) {
-            console.log('not ok')
+            logout()
         }
         return response.json()
     }).then(data => {
         if (Math.floor(data.result.statusCode / 100) !== 2) {
-            console.log('not 200')
+            logout()
         }
         fun(statisticInfo, data, updateHidden)
-    }).catch(e => console.log(e)
+    }).catch(_ => logout()
     ).finally(_ => {
         if (!addToPromises) {
             promises.pop()
@@ -146,7 +146,7 @@ function getHeaders() {
 
 function logout() {
     localStorage.removeItem('token')
-    window.location = "http://localhost:63342/el-frontend/plain/mauseloch.html"
+    window.location = "https://www.earthlat1200.org/mauseloch.html"
 }
 
 function waitForPromises() {
