@@ -8,22 +8,34 @@ let globe = {};
 let lng = 0;
 let stations = [];
 let activeStation = {};
+let pm = 3.8;
+let dm = 0.009;
+let rm = 600.4;
 
 document.addEventListener("DOMContentLoaded", function () {
+
+
     getStations().then(() => {
-        activeStation = stations[0]
-        setClosestStation()
-        createGlobe()
-        loadImage();
+        getMultiplicators().then(x => {
+            pm = x.priorityMultiplicator;
+            dm = x.distanzeMultiplicator;
+            rm = x.randomMultiplicator;
 
-        function refresh() {
-            lng = calcNoonMeridian()
-            let arcData = getArcData()
-            drawArcOnGlobe(arcData)
-        }
+            activeStation = stations[0]
+            setActiveStation();
+            //setClosestStation()
+            createGlobe()
+            loadImage();
 
-        setInterval(refresh, 5000)
-        setGlobePOV();
+            function refresh() {
+                lng = calcNoonMeridian()
+                let arcData = getArcData()
+                drawArcOnGlobe(arcData)
+            }
+
+            setInterval(refresh, 5000)
+            setGlobePOV();
+        });
     })
 })
 
@@ -32,11 +44,34 @@ function getStations() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'x-functions-key': FUNCTIONS_KEY
+            'x-functions-key': FUNCTIONS_KEY,
         }
     }).then(res => res.json()).then(s => {
         stations = s.result.value;
     })
+
+}
+
+function getMultiplicators() {
+    return fetch("http://localhost:7071/api/GetPriorityMultiplicators", {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'x-functions-key': FUNCTIONS_KEY,
+        }
+    }).then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Handle the response data here
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
 }
 
 function setClosestStation() {
@@ -49,6 +84,29 @@ function setClosestStation() {
             activeStation = station
         }
     }
+
+}
+
+function setActiveStation() {
+    lng = calcNoonMeridian();
+    var stationDistanz = new Map();
+    for (const station of stations) {
+        let offset = MAX_LNG_OFFSET - Math.abs(station.longitude - lng)
+        stationDistanz.set(station.stationId, offset);
+    }
+
+    var stationEndResult = new Map();
+    for (const station of stations) {
+        var value = 0;
+        //value += station.priority * pm;
+        value += stationDistanz.get(station.stationId) * dm;
+        value += Math.random() * rm;
+        stationEndResult.set(station.stationId, value);
+    }
+    var max = Math.max(...stationEndResult.values());
+    key = getByValue(stationEndResult, max);
+    var station = stations.filter(x => key == x.stationId)[0]
+    activeStation = station ?? stations[0];
 }
 
 function calcNoonMeridian() {
@@ -200,7 +258,11 @@ function setGlobePOV(currentAltitude) {
         altitude = DEFAULT_PORTRAIT_ALTITUDE;
     }
     if (!currentAltitude) {
-        globe.pointOfView({lat, lng, altitude});
+        globe.pointOfView({
+            lat,
+            lng,
+            altitude
+        });
     }
 }
 
@@ -213,8 +275,7 @@ function calcHeight() {
 }
 
 function getArcData() {
-    const arcData = [
-        {
+    const arcData = [{
             startLat: 0,
             startLng: lng,
             endLat: 90,
@@ -259,3 +320,10 @@ onClickClose = () => {
 window.addEventListener('resize', (event) => {
     setGlobePOV(true);
 });
+
+function getByValue(map, searchValue) {
+    for (let [key, value] of map.entries()) {
+        if (value === searchValue)
+            return key;
+    }
+}
